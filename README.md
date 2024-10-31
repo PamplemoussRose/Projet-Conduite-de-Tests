@@ -1,3 +1,8 @@
+Pour lancer le projet:
+  - 'npm start' à la racine du projet
+  - 'npm run serve' dans le dossier 'frontend'
+
+
 ARCHITECTURE TYPE
 
 /project-root
