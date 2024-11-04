@@ -4,6 +4,6 @@ module.exports = defineConfig({
 })
 module.exports = {
   devServer: {
-    proxy: 'http://localhost:3000', // ou le port de votre backend Node.js
+    //proxy: 'http://localhost:3000', // ou le port de votre backend Node.js
   },
 };

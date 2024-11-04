@@ -1,37 +1,12 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-/*
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-*/
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      message: ''
-    };
-  },
-  mounted() {
-    // Appel de l'API au backend
-    axios.get('http://localhost:3000/')
-        .then(response => {
-          this.message = response.data.message;
-        })
-        .catch(error => {
-          console.error("Erreur lors de l'appel à l'API :", error);
-        });
-  }
+  name: 'App'
 };
 </script>
 
