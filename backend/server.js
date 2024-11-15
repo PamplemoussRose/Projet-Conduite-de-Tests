@@ -6,13 +6,19 @@ const PORT = 3000;
 // Middleware pour gérer les requêtes JSON
 app.use(express.json());
 
-/**
- * Route GET de base
- * @route GET /
- * @returns {Object} message - Retourne un message JSON
- */
-app.get('/', (req, res) => {
+
+app.get('/testCo', (req, res) => {
     res.json({ message: 'Bienvenue sur le serveur Node.js !' });
+});
+
+app.get('/hello', (req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello World!');
+});
+
+app.get('/', (req, res) => {
+    const viewName = req.query.view || '';
+    res.redirect(`http://localhost:8080/${viewName}`); // Frontend Vue.js
 });
 
 /**
