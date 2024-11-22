@@ -7,8 +7,8 @@
 
     <nav class="dashboard-nav">
       <ul>
-        <li><router-link to="/manage-users">User Management</router-link></li>
-        <li><router-link to="/materials">Material Management</router-link></li>
+        <li><router-link to="/user-management">User Management</router-link></li>
+        <li><router-link to="/equipment-page">Equipment Management</router-link></li>
       </ul>
     </nav>
 
@@ -24,25 +24,18 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      recentActivities: [
-        "Jaafar est trop beau.",
-        "Jaafar a reservé le materiel beauté ID 45674.",
-        "Thomas trouve que Jaafar est trop beau",
-      ],
-    };
-  },
-  methods: {
-    logout() {
-      // Debug pour deconnection (ou pas)
-      alert("Logged out!");
-      this.$router.push({ name: "Login" });
-    },
-  },
+  export default {
+    methods: {
+      logout() {
+        // Debug pour deconnection (ou pas)
+        alert("Logged out!");
+        this.$router.push('/');
+      }
+    }
 };
 </script>
+
+
 
 <style scoped>
 .dashboard {

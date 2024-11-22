@@ -6,10 +6,21 @@ import UserLogin from '@/views/UserLogin.vue';
 import UserManagement from '@/views/UserManagement.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
+<<<<<<< HEAD
+=======
+import UserLogin from '@/views/UserLogin.vue';
+import AdminDashboard from '@/views/AdminDashboard.vue';
+import UserManagement from '@/views/UserManagement.vue';
+import EquipmentDetail from "@/views/EquipmentDetail.vue";
+import EquipmentPage from "@/views/EquipmentPage.vue";
+
+
+
+>>>>>>> f822a57812af95c45cbaaeb5ffde68f06c06f864
 const routes = [
   {
     path: '/',
-    name: 'Login',
+    name: 'UserLogin',
     component: UserLogin
   },
   {
@@ -18,15 +29,16 @@ const routes = [
     component: AdminDashboard,
   },
   {
-    path: '/manage-users',
+    path: '/user-management',
     name: 'UserManagement',
     component: UserManagement,
   },
   {
-    path: '/materials',
-    name: 'MaterialPage',
-    component: MaterialPage
+    path: '/equipment-page',
+    name: 'EquipmentPage',
+    component: EquipmentPage,
   },
+<<<<<<< HEAD
   {
     path: '/material/:id',
     name: 'MaterialDetail',
@@ -39,6 +51,13 @@ const routes = [
     component: UserDetails,
     props: true
   },
+=======
+  { path: '/equipment-detail',
+    name: 'EquipmentDetail',
+    component: EquipmentDetail,
+    props: true },
+
+>>>>>>> f822a57812af95c45cbaaeb5ffde68f06c06f864
 ];
 
 const router = createRouter({
