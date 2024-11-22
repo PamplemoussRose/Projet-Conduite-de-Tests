@@ -2,7 +2,8 @@
     <div class="user-management-container">
     <header class="user-management-header">
         <h1 class="title">Users Management</h1>
-        <button class="back-button" @click="$router.go(-1)">Back</button>
+      <button class="back-button" @click="goToPage">Back</button>
+
     </header>
 
       <div class="user-management">
@@ -78,6 +79,7 @@
       };
     },
     methods: {
+<<<<<<< HEAD
       addUser() {
         if (this.newUser.firstName && this.newUser.lastName && this.newUser.id && this.newUser.email) {
           this.users.push({ ...this.newUser });
@@ -92,6 +94,14 @@
   },
 },
 };
+=======
+      goToPage() {
+        // Redirige vers une autre page avec l'URL "/other-page"
+        this.$router.push('/admin-dashboard');
+      }
+    }
+  };
+>>>>>>> f822a57812af95c45cbaaeb5ffde68f06c06f864
   </script>
   
   <style scoped>
