@@ -1,7 +1,7 @@
 <template>
-    <div class="material-page">
-      <header class="material-page-header">
-        <h1 class="title">Materials</h1>
+    <div class="equipment-page">
+      <header class="equipment-page-header">
+        <h1 class="title">Equipment</h1>
         <button class="back-button" @click="handleButtonClick">{{ buttonText }}</button>
       </header>
   
@@ -9,18 +9,18 @@
         <input type="text" v-model="searchQuery" placeholder="Search" class="search-bar" />
       </div>
   
-      <div class="material-table">
+      <div class="equipment-table">
         <table>
           <thead>
             <tr>
               <th>Image</th>
-              <th>Material Name</th>
+              <th>Equipment Name</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(material, index) in filteredMaterials" :key="index" @click="goToMaterialDetail(material.id)" class="clickable-row">
-              <td><img :src="material.image" alt="Material Image" class="material-image" /></td>
-              <td>{{ material.name }}</td>
+            <tr v-for="(equipment, index) in filteredEquipment" :key="index" @click="goToEquipmentDetail(equipment.id)" class="clickable-row">
+              <td><img :src="equipment.image" alt="Equipment Image" class="equipment-image" /></td>
+              <td>{{ equipment.name }}</td>
             </tr>
           </tbody>
         </table>
@@ -47,8 +47,8 @@
     data() {
       return {
         searchQuery: "",
-        status: "admin", 
-        materials: [
+        status: "admin",
+        equipment: [
           { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/100" },
           { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/100" },
           { id: 1, name: "Samsung A11", image: "https://via.placeholder.com/100" },
@@ -63,9 +63,9 @@
       };
     },
     computed: {
-      filteredMaterials() {
-        return this.materials.filter((material) =>
-          material.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      filteredEquipment() {
+        return this.equipment.filter((equipment) =>
+            equipment.name.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
       },
       buttonText() {
@@ -77,16 +77,15 @@
     methods: {
       handleButtonClick() {
         if (this.status === "offline") {
-          this.$router.push({ name: "Login" });
+          this.$router.push('/');
         } else if (this.status === "user") {
-          alert("Logged out!");
-          this.status = "offline";
+          //faudrait pas qu'il vois ce boutton
         } else if (this.status === "admin") {
-          this.$router.push({ name: "AdminDashboard" });
+          this.$router.push('/admin-dashboard');
         }
       },
-      goToMaterialDetail(id) {
-        this.$router.push({ name: "MaterialDetail", params: { id } });
+      goToEquipmentDetail(id) {
+        this.$router.push({ name: "EquipmentDetail", params: { id } });
       }
     },
   };
@@ -94,7 +93,7 @@
   
   <style scoped>
 
-  .material-page {
+  .equipment-page {
   max-width: 800px;
   margin: auto;
   padding: 2rem;
@@ -104,7 +103,7 @@
   26px -26px 52px #fffaff;
   }
   
-  .material-page-header {
+  .equipment-page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -138,7 +137,7 @@
     max-width: 400px;
   }
   
-  .material-table {
+  .equipment-table {
     overflow-y: auto;
     max-height: 400px;
     border: 1px solid #ccc;
@@ -160,7 +159,7 @@
     background-color: #e8e8ff;
   }
   
-  .material-image {
+  .equipment-image {
     width: 80px;
     height: 80px;
   }
@@ -185,4 +184,5 @@
     color: #494850;
   }
   </style>
-  
+
+

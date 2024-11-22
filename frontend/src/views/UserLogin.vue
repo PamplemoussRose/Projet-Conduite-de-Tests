@@ -58,9 +58,9 @@ export default {
         this.success = "Login successful!";
         setTimeout(() => {
           if (this.loginRole === 'admin') {
-            this.$router.push({ name: 'AdminDashboard' });
+            this.$router.push('/admin-dashboard');
           } else if (this.loginRole === 'user') {
-            this.$router.push({ name: 'MaterialPage' });
+            this.$router.push('/equipment-page');
           }
         }, 1000);
       } else {

@@ -21,6 +21,14 @@ app.get('/', (req, res) => {
     res.redirect(`http://localhost:8080/${viewName}`); // Frontend Vue.js
 });
 
+app.get('/equipment-detail', (req, res) => {
+    res.json({ message: 'Je suis GET !' });
+});
+
+app.post('/equipment-detail', (req, res) => {
+    res.json({ message: 'Je suis POST !' });
+});
+
 /**
  * Démarrer le serveur
  */

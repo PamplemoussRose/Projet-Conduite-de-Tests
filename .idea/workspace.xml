@@ -6,9 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/MaterialDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/MaterialPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,16 +40,18 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Robin&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.15.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.15.0&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.18.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.17.6&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/robin/OneDrive/Polytech/4A - Tours/Conduite de test/projet-conduite-de-tests&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;C:/Users/robin/AppData/Roaming/JetBrains/WebStorm2024.2/node/versions/20.15.0/node&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;Settings.JavaScript&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
@@ -72,6 +78,7 @@
       <workItem from="1730367134656" duration="1065000" />
       <workItem from="1730974191582" duration="15000" />
       <workItem from="1731678206107" duration="8953000" />
+      <workItem from="1732268378824" duration="2342000" />
     </task>
     <servers />
   </component>

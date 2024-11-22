@@ -1,13 +1,13 @@
 <template>
-    <div class="material-detail-page">
-      <button class="back-button" @click="$router.go(-1)">Back</button>
-      <h1>{{ material.name }}</h1>
-      <img :src="material.image" alt="Material Image" class="material-image" />
+    <div class="equipment-detail-page">
+      <button class="back-button" @click="goToPage">Back</button>
+      <h1>{{ equipment.name }}</h1>
+      <img :src="equipment.image" alt="Equipment Image" class="equipment-image" />
   
-      <div class="material-info">
-        <p><strong>Version:</strong> {{ material.version }}</p>
-        <p><strong>Reference:</strong> {{ material.reference }}</p>
-        <p><strong>Phone number:</strong> {{ material.phoneNumber }}</p>
+      <div class="equipment-info">
+        <p><strong>Version:</strong> {{ equipment.version }}</p>
+        <p><strong>Reference:</strong> {{ equipment.reference }}</p>
+        <p><strong>Phone number:</strong> {{ equipment.phoneNumber }}</p>
       </div>
   
       <div class="date-selection">
@@ -16,8 +16,8 @@
         <label for="end-date">End:</label>
         <input type="date" id="end-date" v-model="endDate" />
       </div>
-  
-      <button class="borrow-button">Borrow</button>
+
+      <button class="borrow-button" @click="post">Borrow</button>
     </div>
   </template>
   
@@ -25,7 +25,7 @@
   export default {
     data() {
       return {
-        material: {
+        equipment: {
           id: null,
           name: "",
           image: "https://via.placeholder.com/300",
@@ -38,19 +38,36 @@
       };
     },
     mounted() {
-      const materialId = this.$route.params.id;
+      const equipmentId = this.$route.params.id;
       // Données factices juste pour debug
-      if (materialId == 1) {
-        this.material = { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/300", version: "A10", reference: "A10-123", phoneNumber: "123-456-7890" };
-      } else if (materialId == 2) {
-        this.material = { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/300", version: "iPad Pro", reference: "IP-123", phoneNumber: "123-456-7890" };
+      if (equipmentId == 1) {
+        this.equipment = { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/300", version: "A10", reference: "A10-123", phoneNumber: "123-456-7890" };
+      } else if (equipmentId == 2) {
+        this.equipment = { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/300", version: "iPad Pro", reference: "IP-123", phoneNumber: "123-456-7890" };
       }
     },
+    methods: {
+      goToPage() {
+        // Redirige vers une autre page avec l'URL "/other-page"
+        this.$router.push('/equipment-page');
+      },
+      post() {
+          fetch('http://localhost:3000/endpoint', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: 'value' })
+          })
+              .then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('Erreur :', error));
+
+      }
+    }
   };
   </script>
   
   <style scoped>
-  .material-detail-page {
+  .equipment-detail-page {
     max-width: 800px;
     margin: auto;
     padding: 2rem;
@@ -73,28 +90,28 @@
     background-color: #978897;
   }
   
-  .material-title {
+  .equipment-title {
     text-align: center;
     font-size: 1.5rem;
     color: #494850;
     margin-bottom: 1rem;
   }
   
-  .material-content {
+  .equipment-content {
     display: flex;
     gap: 1rem;
     align-items: center;
     margin-bottom: 1rem;
   }
   
-  .material-image {
+  .equipment-image {
     width: 120px;
     height: 120px;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
   
-  .material-info p {
+  .equipment-info p {
     margin: 0.25rem 0;
   }
   

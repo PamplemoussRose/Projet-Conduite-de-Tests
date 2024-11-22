@@ -2,7 +2,8 @@
     <div class="user-management-container">
     <header class="user-management-header">
         <h1 class="title">Users Management</h1>
-        <button class="back-button" @click="$router.go(-1)">Back</button>
+      <button class="back-button" @click="goToPage">Back</button>
+
     </header>
 
       <div class="user-management">
@@ -74,14 +75,9 @@
       };
     },
     methods: {
-      addUser() {
-        if (this.newUser.firstName && this.newUser.lastName && this.newUser.id && this.newUser.email) {
-          this.users.push({ ...this.newUser });
-          this.newUser = { firstName: '', lastName: '', id: '', email: '', role: 'User' };
-          this.errorMessage = '';
-        } else {
-          this.errorMessage = 'Please fill in all fields.';
-        }
+      goToPage() {
+        // Redirige vers une autre page avec l'URL "/other-page"
+        this.$router.push('/admin-dashboard');
       }
     }
   };
