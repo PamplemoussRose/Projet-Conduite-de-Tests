@@ -58,9 +58,10 @@ export default {
         this.success = "Login successful!";
         setTimeout(() => {
           if (this.loginRole === 'admin') {
-            this.$router.push('/admin-dashboard');
+            window.location.href = `http://localhost:3000/admin-dashboard`;
+
           } else if (this.loginRole === 'user') {
-            this.$router.push('/equipment-page');
+            window.location.href = `http://localhost:3000/equipment-page`;
           }
         }, 1000);
       } else {

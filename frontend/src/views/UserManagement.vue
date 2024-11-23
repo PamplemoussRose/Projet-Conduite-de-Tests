@@ -77,7 +77,11 @@
     methods: {
       goToPage() {
         // Redirige vers une autre page avec l'URL "/other-page"
-        this.$router.push('/admin-dashboard');
+        window.location.href = 'http://localhost:3000/admin-dashboard';
+      },
+      addUser() {
+        // Redirige vers une autre page avec l'URL "/other-page"
+        //faire un post
       }
     }
   };

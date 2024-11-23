@@ -39,20 +39,22 @@
     },
     mounted() {
       const equipmentId = this.$route.params.id;
-      // Données factices juste pour debug
-      if (equipmentId == 1) {
-        this.equipment = { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/300", version: "A10", reference: "A10-123", phoneNumber: "123-456-7890" };
-      } else if (equipmentId == 2) {
-        this.equipment = { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/300", version: "iPad Pro", reference: "IP-123", phoneNumber: "123-456-7890" };
-      }
+      fetch(`http://localhost:3000/equipment-detail/${equipmentId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data); // Vérifier la réponse
+            this.equipment.id = data.id; // Mettre à jour l'ID dans les données de l'équipement
+          })
+          .catch(error => console.error('Erreur :', error));
     },
+
     methods: {
       goToPage() {
         // Redirige vers une autre page avec l'URL "/other-page"
-        this.$router.push('/equipment-page');
+        window.location.href = `http://localhost:3000/equipment-page`;
       },
       post() {
-          fetch('http://localhost:3000/endpoint', {
+          fetch('http://localhost:3000/equipment-page', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key: 'value' })

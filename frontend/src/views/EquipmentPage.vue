@@ -76,18 +76,16 @@
     },
     methods: {
       handleButtonClick() {
-        if (this.status === "offline") {
-          this.$router.push('/');
-        } else if (this.status === "user") {
-          //faudrait pas qu'il vois ce boutton
-        } else if (this.status === "admin") {
-          this.$router.push('/admin-dashboard');
+        try {
+          window.location.href = 'http://localhost:3000/user-login';
+        } catch (error) {
+          console.error('Erreur lors de la redirection :', error);
         }
       },
-      goToEquipmentDetail(id) {
-        this.$router.push({ name: "EquipmentDetail", params: { id } });
-      }
-    },
+      goToEquipmentDetail(equipmentId) {
+          window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
+        },
+    }
   };
   </script>
   
