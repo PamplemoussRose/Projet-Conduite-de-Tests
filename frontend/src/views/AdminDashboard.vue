@@ -7,8 +7,12 @@
 
     <nav class="dashboard-nav">
       <ul>
-        <li><router-link to="/user-management">User Management</router-link></li>
-        <li><router-link to="/equipment-page">Equipment Management</router-link></li>
+        <li>
+          <button @click="navigateTo('/user-management')" class="nav-button">User Management</button>
+        </li>
+        <li>
+          <button @click="navigateTo('/equipment-page')" class="nav-button">Equipment Management</button>
+        </li>
       </ul>
     </nav>
 
@@ -24,18 +28,24 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      logout() {
-        // Debug pour deconnection (ou pas)
-        alert("Logged out!");
-        this.$router.push('/');
-      }
-    }
+export default {
+  data() {
+    return {
+      recentActivities: ["Logged in", "Added new equipment", "Updated user permissions"], // Example activities
+    };
+  },
+  methods: {
+    logout() {
+      // Debug pour deconnection (ou pas)
+      alert("Logged out!");
+      window.location.href = `http://localhost:3000/user-login`;
+    },
+    navigateTo(route) {
+      window.location.href = `http://localhost:3000${route}`;
+    },
+  },
 };
 </script>
-
-
 
 <style scoped>
 .dashboard {
@@ -44,7 +54,7 @@
   padding: 2rem;
   border-radius: 32px;
   background: linear-gradient(225deg, #f2e8ff, #cbc3db);
-  box-shadow:  -26px 26px 52px #c0b8cf, 26px -26px 52px #fffaff;
+  box-shadow: -26px 26px 52px #c0b8cf, 26px -26px 52px #fffaff;
 }
 
 .dashboard-header {
@@ -87,8 +97,7 @@
   width: 100%;
 }
 
-.dashboard-nav button,
-.dashboard-nav a {
+.nav-button {
   color: #fff;
   background-image: linear-gradient(135deg, #A48BB7 0%, #B18FCF 50%, #7A5C98 100%);
   border: none;
@@ -105,13 +114,11 @@
   width: 80%;
 }
 
-.dashboard-nav button:hover,
-.dashboard-nav a:hover {
+.nav-button:hover {
   animation: pulse512 1.5s infinite;
 }
 
-.dashboard-nav button:active,
-.dashboard-nav a:active {
+.nav-button:active {
   scale: 0.95;
 }
 

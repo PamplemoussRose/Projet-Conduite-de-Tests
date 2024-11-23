@@ -7,10 +7,9 @@
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/MaterialDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/MaterialPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" afterDir="false" />
     </list>
@@ -28,6 +27,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -79,10 +81,22 @@
       <workItem from="1730974191582" duration="15000" />
       <workItem from="1731678206107" duration="8953000" />
       <workItem from="1732268378824" duration="2342000" />
+      <workItem from="1732272202319" duration="14378000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
