@@ -2,9 +2,19 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const cors = require('cors');
+
+const corsOptions = {
+    origin: 'http://localhost:8080',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+};
 
 // Middleware pour gérer les requêtes JSON''
 app.use(express.json());
+// CORS pour les requetes depuis le front
+app.use(cors(corsOptions));
 
 //login-page
 //GET
