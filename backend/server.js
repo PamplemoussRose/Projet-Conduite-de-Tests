@@ -27,15 +27,13 @@ app.get('/equipment-detail/:id', (req, res) => {
     res.redirect(`http://localhost:8080/${viewName}`);
 });
 
-
-
-
-
-//equipment-detail
 //POST
 app.post(`/equipment-detail/:id`, (req, res) => {
     res.json({ message: `Je suis POST de detail!` });
 });
+
+
+
 
 //equipment-page
 //GET
@@ -64,6 +62,24 @@ app.put('/equipment-page/:id', (req, res) => {
     res.status(200).json({ message: `Équipement ${id} mis à jour avec succès`, data: { id, key } });
 });
 
+// Get equipments
+// Pour recuperer les données de la base de données
+app.get('/equipment-page/data', (req, res) => {
+    res.json(
+        [
+            { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/100" },
+            { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/100" },
+            { id: 1, name: "Samsung A11", image: "https://via.placeholder.com/100" },
+            { id: 2, name: "Apple iPad 2 ", image: "https://via.placeholder.com/100" },
+            { id: 1, name: "Samsung A12", image: "https://via.placeholder.com/100" },
+            { id: 2, name: "Apple iPad 3", image: "https://via.placeholder.com/100" },
+            { id: 1, name: "Samsung A13", image: "https://via.placeholder.com/100" },
+            { id: 2, name: "Apple iPad 4", image: "https://via.placeholder.com/100" },
+            { id: 1, name: "Samsung A14", image: "https://via.placeholder.com/100" },
+            { id: 2, name: "Apple iPad 5", image: "https://via.placeholder.com/100" },
+        ]
+    )
+});
 
 
 //equipment-modify
@@ -93,6 +109,21 @@ app.post(`/user-management`, (req, res) => {
     //create user using the field
     const viewName = req.query.view || `user-management`;
     res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+// Get users
+// Pour recuperer les données de la base de données
+app.get('/user-management/data', (req, res) => {
+    res.json(
+        [
+            { firstName: "Jaafar", lastName: "Ghiffi", id: "001", email: "jaafar@example.com", role: "Admin" },
+            { firstName: "Thomas", lastName: "Vanwalleghem", id: "002", email: "thomas@example.com", role: "User" },
+            { firstName: "Chaimae", lastName: "Chaaibi", id: "003", email: "clara@example.com", role: "User" },
+            { firstName: "Clara", lastName: "Rouxel", id: "004", email: "chaimae@example.com", role: "Admin" },
+            { firstName: "Robin", lastName: "Laumonier", id: "005", email: "robin@example.com", role: "User" },
+            { firstName: "N’Woumbornam", lastName: "N’Kouba", id: "006", email: "nwoumbornam@example.com", role: "User" }
+        ]
+    )
 });
 
 

@@ -71,14 +71,7 @@
           role: 'User'
         },
         errorMessage: '',
-        users: [
-          { firstName: "Jaafar", lastName: "Ghiffi", id: "001", email: "jaafar@example.com", role: "Admin" },
-          { firstName: "Thomas", lastName: "Vanwalleghem", id: "002", email: "thomas@example.com", role: "User" },
-          { firstName: "Chaimae", lastName: "Chaaibi", id: "003", email: "clara@example.com", role: "User" },
-          { firstName: "Clara", lastName: "Rouxel", id: "004", email: "chaimae@example.com", role: "Admin" },
-          { firstName: "Robin", lastName: "Laumonier", id: "005", email: "robin@example.com", role: "User" },
-          { firstName: "N’Woumbornam", lastName: "N’Kouba", id: "006", email: "nwoumbornam@example.com", role: "User" }
-        ]
+        users: []
       };
     },
     methods: {
@@ -100,7 +93,18 @@
 
         document.body.appendChild(form);
         form.submit();
-      }
+      },
+      getUserData() {
+        fetch('http://localhost:3000/user-management/data')
+          .then(response => response.json())
+          .then(data => {
+            this.users = data;
+          })
+      .catch(error => console.error('Erreur lors de la récupération des données :', error));
+      },
+    },
+    mounted() {
+      this.getUserData();
     }
   };
   </script>
