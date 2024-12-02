@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/firebase.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentModify.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/views/UserDetails.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,6 +85,7 @@
       <workItem from="1731678206107" duration="8953000" />
       <workItem from="1732268378824" duration="2342000" />
       <workItem from="1732272202319" duration="48647000" />
+      <workItem from="1733133341720" duration="984000" />
     </task>
     <servers />
   </component>
