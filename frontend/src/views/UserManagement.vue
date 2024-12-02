@@ -44,11 +44,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(user, index) in users" :key="index">
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.id }}</td>
-              </tr>
-            </tbody>
+  <tr v-for="(user, index) in users" :key="index">
+    <td @click="goToUserDetails(user.id)" style="cursor: pointer;">
+      {{ user.lastName }}
+    </td>
+    <td>{{ user.id }}</td>
+  </tr>
+</tbody>
+
+
           </table>
         </div>
       </div>
@@ -70,14 +74,15 @@
         users: [
           { firstName: "Jaafar", lastName: "Ghiffi", id: "001", email: "jaafar@example.com", role: "Admin" },
           { firstName: "Thomas", lastName: "Vanwalleghem", id: "002", email: "thomas@example.com", role: "User" },
-          { firstName: "Clara", lastName: "Rouxel", id: "003", email: "clara@example.com", role: "User" },
-          { firstName: "Chaimae", lastName: "Chaaibi", id: "004", email: "chaimae@example.com", role: "Admin" },
+          { firstName: "Chaimae", lastName: "Chaaibi", id: "003", email: "clara@example.com", role: "User" },
+          { firstName: "Clara", lastName: "Rouxel", id: "004", email: "chaimae@example.com", role: "Admin" },
           { firstName: "Robin", lastName: "Laumonier", id: "005", email: "robin@example.com", role: "User" },
           { firstName: "N’Woumbornam", lastName: "N’Kouba", id: "006", email: "nwoumbornam@example.com", role: "User" }
         ]
       };
     },
     methods: {
+
       goToPage() {
         // Redirige vers une autre page avec l'URL "/other-page"
         window.location.href = 'http://localhost:3000/admin-dashboard';
