@@ -3,6 +3,7 @@
     <header class="user-modify-header">
       <h1 class="title">Equipment Modify</h1>
       <button class="back-button" @click="goToPage">Back</button>
+      <button @click="logout" class="logout-button">Logout</button>
     </header>
 
     <div class="user-modify">
@@ -40,6 +41,9 @@
 </template>
 
 <script>
+import {auth} from "@/firebase";
+import {signOut} from "firebase/auth";
+
 export default {
   data() {
     return {
@@ -73,6 +77,9 @@ export default {
   },
   /*get user according to his id in the url*/
   mounted() {
+    if(auth.currentUser == null){
+      window.location.href = 'http://localhost:3000/';
+    }
     const equipmentId = parseInt(this.$route.params.id); // Récupère l'ID de l'URL
     this.equipment = this.equipments.find(e => e.id === equipmentId); // Trouve l'équipement
     if (!this.equipment) {
@@ -86,6 +93,12 @@ export default {
   },
 
   methods: {
+    async logout() {
+      // Debug pour deconnection (ou pas)
+      alert("Logged out!");
+      await signOut(auth);
+      window.location.href = `http://localhost:3000/user-login`;
+    },
     goToPage() {
       // Redirige vers une autre page avec l'URL "/other-page"
       window.location.href = `http://localhost:3000/equipment-page`;
@@ -130,6 +143,19 @@ export default {
 
 }
 
+
+.logout-button {
+  background-color: #B18FCF;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #978897;
+}
 
 .back-button {
   background-color: #B18FCF;

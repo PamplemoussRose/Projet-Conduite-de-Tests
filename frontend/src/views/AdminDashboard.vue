@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import { signOut } from "firebase/auth";
+import {auth} from "@/firebase";
+
 export default {
   data() {
     return {
@@ -35,15 +38,19 @@ export default {
     };
   },
   methods: {
-    logout() {
-      // Debug pour deconnection (ou pas)
-      alert("Logged out!");
+    async logout() {
+      await signOut(auth);
       window.location.href = `http://localhost:3000/user-login`;
     },
     navigateTo(route) {
       window.location.href = `http://localhost:3000${route}`;
     },
   },
+  mounted() {
+    if(auth.currentUser == null){
+      window.location.href = 'http://localhost:3000/';
+    }
+  }
 };
 </script>
 
@@ -63,6 +70,30 @@ export default {
   align-items: center;
 }
 
+.logout-button {
+  background-color: #B18FCF;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #978897;
+}
+.logout-button {
+  background-color: #B18FCF;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #978897;
+}
 .logout-button {
   background-color: #B18FCF;
   color: white;

@@ -1,44 +1,44 @@
 <template>
-  <div class="user-details-container">
-    <div class="header">
-      <button @click="$router.go(-1)" class="back-button">Back</button>
-      <h1>UserDetail</h1>
-      <button @click="logout" class="logout-button">Log Out</button>
+  <div class="form-container" v-if="user">
+    <div class="form-group">
+      <label for="lastname">Lastname</label>
+      <input type="text" id="lastname" v-model="user.lastName" placeholder="Lastname" />
     </div>
 
-    <div class="form-container">
-      <div class="form-group">
-        <label for="lastname">Lastname</label>
-        <input type="text" id="lastname" v-model="user.lastName" placeholder="Lastname" />
-      </div>
+    <div class="form-group">
+      <label for="firstname">Firstname</label>
+      <input type="text" id="firstname" v-model="user.firstName" placeholder="Firstname" />
+    </div>
 
-      <div class="form-group">
-        <label for="firstname">Firstname</label>
-        <input type="text" id="firstname" v-model="user.firstName" placeholder="Firstname" />
-      </div>
+    <div class="form-group">
+      <label for="id">Id</label>
+      <input type="text" id="id" v-model="user.id" placeholder="Id" disabled />
+    </div>
 
-      <div class="form-group">
-        <label for="id">Id</label>
-        <input type="text" id="id" v-model="user.id" placeholder="Id" disabled />
-      </div>
+    <div class="form-group">
+      <label for="role">Admin</label>
+      <select id="role" v-model="user.role">
+        <option>User</option>
+        <option>Admin</option>
+      </select>
+    </div>
 
-      <div class="form-group">
-        <label for="role">Admin</label>
-        <select id="role" v-model="user.role">
-          <option>User</option>
-          <option>Admin</option>
-        </select>
-      </div>
-
-      <div class="button-group">
-        <button @click="modifyUser" class="modify-button">Modify</button>
-        <button @click="deleteUser" class="delete-button">Delete</button>
-      </div>
+    <div class="button-group">
+      <button @click="modifyUser" class="modify-button">Modify</button>
+      <button @click="deleteUser" class="delete-button">Delete</button>
     </div>
   </div>
+
+  <div v-else>
+    <p>User not found. Redirecting...</p>
+  </div>
+
 </template>
 
 <script>
+import {auth} from "@/firebase";
+import {signOut} from "firebase/auth";
+
 export default {
   props: ['id'],
   data() {
@@ -51,17 +51,15 @@ export default {
         { id: '004', firstName: 'Laumonier', lastName: 'Robbin', role: 'User' },
         { id: '004', firstName: 'N \'Kouba', lastName: 'Humbert', role: 'User' },
       ],
-      user: null,
+      user: `001`,
     };
   },
-  created() {
-    this.user = this.users.find((u) => u.id === this.id);
-    if (!this.user) {
-      alert('User not found!');
-      this.$router.push('/'); 
-    }
-  },
+
   methods: {
+    goToPage() {
+      // Redirige vers une autre page avec l'URL "/other-page"
+      window.location.href = `http://localhost:3000/user-management`;
+    },
     modifyUser() {
       alert(`User ${this.user.firstName} ${this.user.lastName} modified!`);
     },
@@ -71,11 +69,18 @@ export default {
         this.$router.push('/manage-users');
       }
     },
-    logout() {
-      alert('You have been logged out!');
-      this.$router.push('/'); // Pour redirige vers la page de connexion
+    async logout() {
+      // Debug pour deconnection (ou pas)
+      alert("Logged out!");
+      await signOut(auth);
+      window.location.href = `http://localhost:3000/user-login`;
     },
   },
+  mounted() {
+     if(auth.currentUser == null){
+       window.location.href = 'http://localhost:3000/';
+     }
+  }
 };
 </script>
 

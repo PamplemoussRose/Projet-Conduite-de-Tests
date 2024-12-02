@@ -139,8 +139,8 @@ app.get('/user-management/data', (req, res) => {
 
 //user-detail
 //GET
-app.get(`/user-detail`, (req, res) => {
-    const viewName = req.query.view || `user-detail`;
+app.get(`/user-details/:id`, (req, res) => {
+    const viewName = req.query.view || `user-details`;
     res.redirect(`http://localhost:8080/${viewName}`);
 });
 

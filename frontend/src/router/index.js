@@ -36,7 +36,7 @@ const routes = [
   },
 
   {
-    path: '/user/:id',
+    path: '/user-details',
     name: 'UserDetails',
     component: UserDetails,
     props: true
@@ -46,6 +46,8 @@ const routes = [
     name: 'EquipmentDetail',
     component: EquipmentDetail,
     props: true },
+
+
 ];
 
 const router = createRouter({
