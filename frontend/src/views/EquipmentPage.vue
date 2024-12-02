@@ -53,18 +53,7 @@
       return {
         searchQuery: "",
         status: "admin",
-        equipment: [
-          { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/100" },
-          { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/100" },
-          { id: 1, name: "Samsung A11", image: "https://via.placeholder.com/100" },
-          { id: 2, name: "Apple iPad 2 ", image: "https://via.placeholder.com/100" },
-          { id: 1, name: "Samsung A12", image: "https://via.placeholder.com/100" },
-          { id: 2, name: "Apple iPad 3", image: "https://via.placeholder.com/100" },
-          { id: 1, name: "Samsung A13", image: "https://via.placeholder.com/100" },
-          { id: 2, name: "Apple iPad 4", image: "https://via.placeholder.com/100" },
-          { id: 1, name: "Samsung A14", image: "https://via.placeholder.com/100" },
-          { id: 2, name: "Apple iPad 5", image: "https://via.placeholder.com/100" },
-        ],
+        equipment: [],
       };
     },
     computed: {
@@ -125,6 +114,18 @@
       goToEquipmentDetail(equipmentId) {
           window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
         },
+
+      getEquipmentData() {
+        fetch('http://localhost:3000/equipment-page/data')
+            .then(response => response.json())
+            .then(data => {
+              this.equipment = data;
+            })
+            .catch(error => console.error('Erreur lors de la récupération des données :', error));
+      },
+    },
+    mounted() {
+      this.getEquipmentData();
     }
   };
   </script>
