@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 export default {
   data() {
     return {
@@ -47,27 +49,23 @@ export default {
     };
   },
   methods: {
-    submitLogin() {
-      const testEmail = 'user@example.com';
-      const testPassword = 'password';
+    async submitLogin() {
+      try {
+        // Authentification de l'utilisateur
+        const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
+        const user = userCredential.user; // Objet utilisateur connecté
 
-      this.error = '';
-      this.success = '';
-
-      if (this.email === testEmail && this.password === testPassword) {
-        this.success = "Login successful!";
-        setTimeout(() => {
-          if (this.loginRole === 'admin') {
-            window.location.href = `http://localhost:3000/admin-dashboard`;
-
-          } else if (this.loginRole === 'user') {
-            window.location.href = `http://localhost:3000/equipment-page`;
-          }
-        }, 1000);
-      } else {
-        this.error = "Invalid email or password.";
+        if (user.uid == "JbXDW4NoXdRLaYRxhCKwv48iWDr1"){
+          window.location.href = "http://localhost:3000/admin-dashboard";
+        }else {
+          window.location.href = "http://localhost:3000/equipment-page";
+        }
+      } catch (error) {
+        // Gestion des erreurs
+        console.error("Erreur de connexion :", error.message);
+        this.error = "Impossible de se connecter. Veuillez vérifier vos identifiants.";
       }
-    }
+    },
   }
 };
 </script>

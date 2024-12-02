@@ -15,13 +15,18 @@
             <tr>
               <th>Image</th>
               <th>Equipment Name</th>
+              <th>Modify</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(equipment, index) in filteredEquipment" :key="index" @click="goToEquipmentDetail(equipment.id)" class="clickable-row">
               <td><img :src="equipment.image" alt="Equipment Image" class="equipment-image" /></td>
               <td>{{ equipment.name }}</td>
+              <td><button class="add-button" @click.stop="Actionmodify(equipment.id)">Modify</button></td>
+              <td><button class="add-button" @click.stop="Actiondelete(equipment.id)">Delete</button></td>
             </tr>
+
           </tbody>
         </table>
       </div>
@@ -75,6 +80,41 @@
       },
     },
     methods: {
+      Actionmodify(modifyId) {
+          fetch(`http://localhost:3000/equipment-page/${modifyId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: 'value' }),
+          })
+              .then(response => {
+                if (response.ok) {
+                  console.log('Modification réussie');
+                } else {
+                  console.error('Erreur lors de la modification');
+                }
+              })
+              .catch(error => console.error('Erreur réseau :', error));
+        },
+
+      Actiondelete(deleteId){
+          fetch(`http://localhost:3000/equipment-page/${deleteId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: 'value' }),
+          })
+              .then(response => {
+                if (response.ok) {
+                  console.log('Modification réussie');
+                } else {
+                  console.error('Erreur lors de la modification');
+                }
+              })
+              .catch(error => console.error('Erreur réseau :', error));
+        },
       handleButtonClick() {
         try {
           window.location.href = 'http://localhost:3000/user-login';
@@ -120,7 +160,30 @@
   .back-button:hover {
     background-color: #978897;
   }
-  
+
+
+
+  .add-button {
+    border: none;
+    color: #fff;
+    background-image: linear-gradient(30deg, #7D5C97, #A693C4);
+    border-radius: 20px;
+    background-size: 100% auto;
+    font-family: inherit;
+    font-size: 17px;
+    padding: 0.6em 1.5em;
+    cursor: pointer;
+    transition: background-size 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .add-button:hover {
+    background-position: right center;
+    background-size: 200% auto;
+    -webkit-animation: pulse 1.5s infinite;
+    animation: pulse 1.5s infinite;
+  }
+
+
   .search-container {
     display: flex;
     justify-content: center;

@@ -27,7 +27,10 @@
             </select>
           </div>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-          <button class="add-button" @click="addUser">Add User</button>
+          <form action="http://localhost:3000/user-management" method="POST">
+            <input type="hidden" name="key" value="value">
+            <button type="submit" @click="addUser" >Add User</button>
+          </form>
         </div>
 
     
@@ -80,8 +83,18 @@
         window.location.href = 'http://localhost:3000/admin-dashboard';
       },
       addUser() {
-        // Redirige vers une autre page avec l'URL "/other-page"
-        //faire un post
+        const form = document.createElement('form');
+        form.action = 'http://localhost:3000/user-management';
+        form.method = 'POST';
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'key';
+        input.value = 'value';
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
       }
     }
   };
