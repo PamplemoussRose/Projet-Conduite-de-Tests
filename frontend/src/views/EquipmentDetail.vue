@@ -1,6 +1,7 @@
 <template>
     <div class="equipment-detail-page">
       <button class="back-button" @click="goToPage">Back</button>
+      <button @click="logout" class="logout-button">Logout</button>
       <h1>{{ equipment.name }}</h1>
       <img :src="equipment.image" alt="Equipment Image" class="equipment-image" />
   
@@ -22,6 +23,10 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  import {auth} from "@/firebase";
+  import {signOut} from "firebase/auth";
+
   export default {
     data() {
       return {
@@ -37,32 +42,43 @@
         endDate: "",
       };
     },
+
     mounted() {
+      if (auth.currentUser == null) {
+        window.location.href = 'http://localhost:3000/';
+      }
+
       const equipmentId = this.$route.params.id;
-      fetch(`http://localhost:3000/equipment-detail/${equipmentId}`)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data); // Vérifier la réponse
-            this.equipment.id = data.id; // Mettre à jour l'ID dans les données de l'équipement
+      axios.get(`http://localhost:3000/equipment-detail/${equipmentId}`)
+          .then(response => {
+            console.log(response.data); // Vérifier la réponse
+            this.equipment.id = response.data.id; // Mettre à jour l'ID dans les données de l'équipement
           })
           .catch(error => console.error('Erreur :', error));
     },
 
+
     methods: {
+      async logout() {
+        // Debug pour deconnection (ou pas)
+        alert("Logged out!");
+        await signOut(auth);
+        window.location.href = `http://localhost:3000/user-login`;
+      },
       goToPage() {
         // Redirige vers une autre page avec l'URL "/other-page"
         window.location.href = `http://localhost:3000/equipment-page`;
       },
       post() {
-          fetch('http://localhost:3000/equipment-page', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key: 'value' })
-          })
-              .then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('Erreur :', error));
-
+        axios.post('http://localhost:3000/equipment-page', {
+          key: 'value'
+        })
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error('Erreur :', error);
+            });
       }
     }
   };
@@ -91,7 +107,22 @@
   .back-button:hover {
     background-color: #978897;
   }
-  
+
+
+  .logout-button {
+    background-color: #B18FCF;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .logout-button:hover {
+    background-color: #978897;
+  }
+
+
   .equipment-title {
     text-align: center;
     font-size: 1.5rem;

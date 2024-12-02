@@ -3,6 +3,7 @@
       <header class="equipment-page-header">
         <h1 class="title">Equipment</h1>
         <button class="back-button" @click="handleButtonClick">{{ buttonText }}</button>
+        <button @click="logout" class="logout-button">Logout</button>
       </header>
   
       <div class="search-container">
@@ -49,6 +50,8 @@
   
   <script>
   import axios from "axios";
+  import {auth} from "@/firebase";
+  import {signOut} from "firebase/auth";
 
   export default {
     data() {
@@ -71,40 +74,26 @@
       },
     },
     methods: {
+      async logout() {
+        // Debug pour deconnection (ou pas)
+        alert("Logged out!");
+        await signOut(auth);
+        window.location.href = `http://localhost:3000/user-login`;
+      },
       Actionmodify(modifyId) {
-        fetch(`http://localhost:3000/equipment-page/${modifyId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({key: 'value'}),
-        })
+        window.location.href = (`http://localhost:3000/equipment-page/${modifyId}`)
+      },
+      Actiondelete(deleteId) {
+        axios.delete(`http://localhost:3000/equipment-page/${deleteId}`)
             .then(response => {
-              if (response.ok) {
-                console.log('Modification réussie');
+              if (response.status === 200) {
+                console.log('Suppression réussie');
               } else {
-                console.error('Erreur lors de la modification');
+                console.error('Erreur lors de la suppression');
               }
             })
             .catch(error => console.error('Erreur réseau :', error));
-      },
 
-      Actiondelete(deleteId) {
-        fetch(`http://localhost:3000/equipment-page/${deleteId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({key: 'value'}),
-        })
-        .then(response => {
-          if (response.ok) {
-            console.log('Modification réussie');
-          } else {
-            console.error('Erreur lors de la modification');
-          }
-        })
-        .catch(error => console.error('Erreur réseau :', error));
         console.log(this.equipment);
       },
       handleButtonClick() {
@@ -129,6 +118,9 @@
       },
     },
     mounted() {
+      if(auth.currentUser == null) {
+        window.location.href = 'http://localhost:3000/';
+      }
       this.getEquipmentData();
     }
   };
@@ -167,6 +159,18 @@
   }
 
 
+  .logout-button {
+    background-color: #B18FCF;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .logout-button:hover {
+    background-color: #978897;
+  }
 
   .add-button {
     border: none;

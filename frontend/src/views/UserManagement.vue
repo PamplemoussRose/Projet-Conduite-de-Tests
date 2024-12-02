@@ -3,6 +3,7 @@
     <header class="user-management-header">
         <h1 class="title">Users Management</h1>
       <button class="back-button" @click="goToPage">Back</button>
+      <button @click="logout" class="logout-button">Logout</button>
 
     </header>
 
@@ -29,7 +30,7 @@
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
           <form action="http://localhost:3000/user-management" method="POST">
             <input type="hidden" name="key" value="value">
-            <button type="submit" @click="addUser" >Add User</button>
+            <button type="submit" @click="addUser" class="add-button">Add User</button>
           </form>
         </div>
 
@@ -60,8 +61,9 @@
   </template>
   
   <script>
-
+  import { auth } from "../firebase";
   import axios from "axios";
+  import {signOut} from "firebase/auth";
 
   export default {
     data() {
@@ -78,7 +80,12 @@
       };
     },
     methods: {
-
+      async logout() {
+        // Debug pour deconnection (ou pas)
+        alert("Logged out!");
+        await signOut(auth);
+        window.location.href = `http://localhost:3000/user-login`;
+      },
       goToPage() {
         // Redirige vers une autre page avec l'URL "/other-page"
         window.location.href = 'http://localhost:3000/admin-dashboard';
@@ -106,8 +113,15 @@
               console.error('Erreur lors de la récupération des données :', error);
             });
       },
+      goToUserDetails(userId) {
+        // Redirection vers la page des détails de l'utilisateur en utilisant Vue Router
+        window.location.href = `http://localhost:3000/user-details/${userId}`;
+      },
     },
     mounted() {
+      if(auth.currentUser == null){
+        window.location.href = 'http://localhost:3000/';
+      }
       this.getUserData();
     }
   };
@@ -130,6 +144,20 @@
   align-items: center;
 
 }
+
+
+  .logout-button {
+    background-color: #B18FCF;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .logout-button:hover {
+    background-color: #978897;
+  }
 
 
   .back-button {
