@@ -60,6 +60,9 @@
   </template>
   
   <script>
+
+  import axios from "axios";
+
   export default {
     data() {
       return {
@@ -95,12 +98,13 @@
         form.submit();
       },
       getUserData() {
-        fetch('http://localhost:3000/user-management/data')
-          .then(response => response.json())
-          .then(data => {
-            this.users = data;
-          })
-      .catch(error => console.error('Erreur lors de la récupération des données :', error));
+        axios.get('http://localhost:3000/user-management/data')
+            .then(response => {
+              this.users = response.data;
+            })
+            .catch(error => {
+              console.error('Erreur lors de la récupération des données :', error);
+            });
       },
     },
     mounted() {

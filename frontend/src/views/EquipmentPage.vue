@@ -48,6 +48,8 @@
   </template>
   
   <script>
+  import axios from "axios";
+
   export default {
     data() {
       return {
@@ -70,40 +72,41 @@
     },
     methods: {
       Actionmodify(modifyId) {
-          fetch(`http://localhost:3000/equipment-page/${modifyId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ key: 'value' }),
-          })
-              .then(response => {
-                if (response.ok) {
-                  console.log('Modification réussie');
-                } else {
-                  console.error('Erreur lors de la modification');
-                }
-              })
-              .catch(error => console.error('Erreur réseau :', error));
-        },
+        fetch(`http://localhost:3000/equipment-page/${modifyId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({key: 'value'}),
+        })
+            .then(response => {
+              if (response.ok) {
+                console.log('Modification réussie');
+              } else {
+                console.error('Erreur lors de la modification');
+              }
+            })
+            .catch(error => console.error('Erreur réseau :', error));
+      },
 
-      Actiondelete(deleteId){
-          fetch(`http://localhost:3000/equipment-page/${deleteId}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ key: 'value' }),
-          })
-              .then(response => {
-                if (response.ok) {
-                  console.log('Modification réussie');
-                } else {
-                  console.error('Erreur lors de la modification');
-                }
-              })
-              .catch(error => console.error('Erreur réseau :', error));
-        },
+      Actiondelete(deleteId) {
+        fetch(`http://localhost:3000/equipment-page/${deleteId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({key: 'value'}),
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('Modification réussie');
+          } else {
+            console.error('Erreur lors de la modification');
+          }
+        })
+        .catch(error => console.error('Erreur réseau :', error));
+        console.log(this.equipment);
+      },
       handleButtonClick() {
         try {
           window.location.href = 'http://localhost:3000/user-login';
@@ -112,16 +115,17 @@
         }
       },
       goToEquipmentDetail(equipmentId) {
-          window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
-        },
+        window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
+      },
 
       getEquipmentData() {
-        fetch('http://localhost:3000/equipment-page/data')
-            .then(response => response.json())
-            .then(data => {
-              this.equipment = data;
+        axios.get('http://localhost:3000/equipment-page/data')
+            .then(response => {
+              this.equipment = response.data;
             })
-            .catch(error => console.error('Erreur lors de la récupération des données :', error));
+            .catch(error => {
+              console.error('Erreur lors de la récupération des données :', error);
+            });
       },
     },
     mounted() {
