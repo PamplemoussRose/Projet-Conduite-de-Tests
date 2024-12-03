@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const cors = require('cors');
+const db = require('../frontend/src/mariadb.js');
+
 
 const corsOptions = {
     origin: 'http://localhost:8080',
@@ -11,10 +13,32 @@ const corsOptions = {
     credentials: true,
 };
 
+
 // Middleware pour gérer les requêtes JSON''
 app.use(express.json());
 // CORS pour les requetes depuis le front
 app.use(cors(corsOptions));
+
+
+//récupérer la BDD
+app.get('/bdd', async (req, res) => {
+    let connection;
+    try {
+        // Obtenez une connexion depuis le pool
+        connection = await db.getConnection();
+
+        // Exécutez une requête SQL
+        const rows = await connection.query('SELECT * FROM users');
+        res.json(rows); // Renvoyez les données au client
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erreur serveur');
+    } finally {
+        // Relâchez la connexion dans le pool
+        if (connection) connection.release();
+    }
+});
+
 
 //login-page
 //GET
@@ -28,24 +52,19 @@ app.get('/user-login', (req, res) => {
 });
 
 
-//equipment-detail
+
+//admin-dashboard
+
 //GET
-app.get('/equipment-detail/:id', (req, res) => {
-    const id = req.params.id; // Récupération de l'ID depuis l'URL
-    res.set(id);
-    const viewName = `equipment-detail`;
+app.get(`/admin-dashboard`, (req, res) => {
+    const viewName = req.query.view || `admin-dashboard`;
     res.redirect(`http://localhost:8080/${viewName}`);
 });
-
-//POST
-app.post(`/equipment-detail/:id`, (req, res) => {
-    res.json({ message: `Je suis POST de detail!` });
-});
-
 
 
 
 //equipment-page
+
 //GET
 app.get(`/equipment-page`, (req, res) => {
     const viewName = req.query.view || `equipment-page`;
@@ -72,6 +91,71 @@ app.put('/equipment-page/:id', (req, res) => {
     res.status(200).json({ message: `Équipement ${id} mis à jour avec succès`, data: { id, key } });
 });
 
+
+
+//equipment-detail
+
+//GET
+app.get('/equipment-detail/:id', (req, res) => {
+    const id = req.params.id; // Récupération de l'ID depuis l'URL
+    res.set(id);
+    const viewName = `equipment-detail`;
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+//POST
+app.post(`/equipment-detail/:id`, (req, res) => {
+    res.json({ message: `Je suis POST de detail!` });
+});
+
+
+
+//equipment-modify
+
+//GET
+app.get(`/equipment-modify/:id`, (req, res) => {
+    const id = req.params.id;
+    const viewName = req.query.view || `equipment-modify`;
+    res.set(id);
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+
+
+//user-management
+
+//GET
+app.get(`/user-management`, (req, res) => {
+    const viewName = req.query.view || `user-management`;
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+//POST
+app.post(`/user-management`, (req, res) => {
+    //create user using the field
+    const viewName = req.query.view || `user-management`;
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+
+
+//user-detail
+
+//GET
+app.get(`/user-details/:id`, (req, res) => {
+    const viewName = req.query.view || `user-details`;
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
+
+
+
+//user-modify
+
+//GET
+
+//PUT
+
+
 // Get equipments
 // Pour recuperer les données de la base de données
 app.get('/equipment-page/data', (req, res) => {
@@ -92,34 +176,6 @@ app.get('/equipment-page/data', (req, res) => {
 });
 
 
-//equipment-modify
-//GET
-app.get(`/equipment-modify`, (req, res) => {
-    const viewName = req.query.view || `equipment-modify`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
-
-
-//admin-dashboard
-//GET
-app.get(`/admin-dashboard`, (req, res) => {
-    const viewName = req.query.view || `admin-dashboard`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
-
-
-//user-management
-//GET
-app.get(`/user-management`, (req, res) => {
-    const viewName = req.query.view || `user-management`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
-//POST
-app.post(`/user-management`, (req, res) => {
-    //create user using the field
-    const viewName = req.query.view || `user-management`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
 
 // Get users
 // Pour recuperer les données de la base de données
@@ -137,28 +193,9 @@ app.get('/user-management/data', (req, res) => {
 });
 
 
-//user-detail
-//GET
-app.get(`/user-details/:id`, (req, res) => {
-    const viewName = req.query.view || `user-details`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
 
 
-//equipment-page
-//GET
-app.get(`/equipment-page`, (req, res) => {
-    const viewName = req.query.view || `equipment-page`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
 
-
-//equipment-modification
-//GET
-app.get(`/equipment-modification`, (req, res) => {
-    const viewName = req.query.view || `equipment-modification`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
 
 /**
  * Démarrer le serveur

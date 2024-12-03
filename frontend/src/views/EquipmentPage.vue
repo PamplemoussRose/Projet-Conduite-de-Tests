@@ -81,7 +81,7 @@
         window.location.href = `http://localhost:3000/user-login`;
       },
       Actionmodify(modifyId) {
-        window.location.href = (`http://localhost:3000/equipment-page/${modifyId}`)
+        window.location.href = (`http://localhost:3000/equipment-modify/${modifyId}`)
       },
       Actiondelete(deleteId) {
         axios.delete(`http://localhost:3000/equipment-page/${deleteId}`)
