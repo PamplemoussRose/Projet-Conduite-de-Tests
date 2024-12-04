@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="Données equipments et users dans le back (à remplacer par les request bdd">
-      <change afterPath="$PROJECT_DIR$/frontend/src/mariadb.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/mariadb.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/mariadb.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +102,8 @@
       <workItem from="1733135731334" duration="3436000" />
       <workItem from="1733156800622" duration="1499000" />
       <workItem from="1733160793515" duration="5728000" />
-      <workItem from="1733232835886" duration="2105000" />
+      <workItem from="1733232835886" duration="3681000" />
+      <workItem from="1733346799640" duration="3287000" />
     </task>
     <task id="LOCAL-00001" summary="Données equipments et users dans le back (à remplacer par les request bdd">
       <option name="closed" value="true" />
