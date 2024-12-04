@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const cors = require('cors');
-const db = require('../frontend/src/mariadb.js');
+const mariadb = require('../frontend/src/mariadb.js');
 
 
 const corsOptions = {
@@ -19,23 +19,48 @@ app.use(express.json());
 // CORS pour les requetes depuis le front
 app.use(cors(corsOptions));
 
-
-//récupérer la BDD
 app.get('/bdd', async (req, res) => {
     let connection;
     try {
-        // Obtenez une connexion depuis le pool
-        connection = await db.getConnection();
+        // Utilise pool.getConnection() pour obtenir une connexion
+        connection = await mariadb.pool.getConnection();
 
-        // Exécutez une requête SQL
-        const rows = await connection.query('SELECT * FROM users');
-        res.json(rows); // Renvoyez les données au client
+        // Exécute la requête SQL pour récupérer tous les utilisateurs
+        const rows = await connection.query('SELECT * FROM utilisateurs');
+
+        // Retourne les résultats sous forme de JSON
+        res.status(200).json(rows);
     } catch (err) {
         console.error(err);
         res.status(500).send('Erreur serveur');
     } finally {
-        // Relâchez la connexion dans le pool
+        // Relâche la connexion dans le pool
         if (connection) connection.release();
+    }
+});
+
+
+
+app.get('/add-fake-users', async (req, res) => {
+    try {
+        const fakeUsers = [
+            ['Dupont', 'Jean', 'jean.dupont@example.com', 'MAT0001', 'EMPRUNTEUR'], // Changer 'USER' en 'EMPRUNTEUR'
+            ['Martin', 'Sophie', 'sophie.martin@example.com', 'MAT0002', 'ADMINISTRATEUR'], // Changer 'ADMIN' en 'ADMINISTRATEUR'
+        ];
+
+
+        for (const user of fakeUsers) {
+            await mariadb.executeQuery(
+                `INSERT INTO utilisateurs (nomUtilisateur, prenomUtilisateur, emailUtilisateur, matriculeUtilisateur, roleUtilisateur) 
+                 VALUES (?, ?, ?, ?, ?)`,
+                user
+            );
+        }
+
+        res.status(200).json({ message: 'Données fictives ajoutées avec succès' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Erreur lors de l\'ajout des données' });
     }
 });
 
