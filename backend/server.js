@@ -19,25 +19,9 @@ app.use(express.json());
 // CORS pour les requetes depuis le front
 app.use(cors(corsOptions));
 
-app.get('/bdd', async (req, res) => {
-    let connection;
-    try {
-        // Utilise pool.getConnection() pour obtenir une connexion
-        connection = await mariadb.pool.getConnection();
 
-        // Exécute la requête SQL pour récupérer tous les utilisateurs
-        const rows = await connection.query('SELECT * FROM utilisateurs');
 
-        // Retourne les résultats sous forme de JSON
-        res.status(200).json(rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur serveur');
-    } finally {
-        // Relâche la connexion dans le pool
-        if (connection) connection.release();
-    }
-});
+// Exemple appel a la bdd : app.get('/bdd', getBDDInfo('SELECT * FROM utilisateurs'));   bien sur on peut mettre n'importe qu'elle requette sql
 
 
 
@@ -63,6 +47,36 @@ app.get('/add-fake-users', async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de l\'ajout des données' });
     }
 });
+
+
+app.get('/add-fake-materials', async (req, res) => {
+    try {
+
+
+        const fakeMaterials = [
+            ['Ordinateur Portable', '1.0', 'REF01', 'DISPONIBLE', 'http://example.com/photo1.jpg', '001'],
+            ['Projecteur', '2.1', 'REF02', 'EMPRUNTER', 'http://example.com/photo2.jpg', '002'],
+            ['Imprimante', '3.2', 'REF03', 'DISPONIBLE', 'http://example.com/photo3.jpg', '003']
+        ];
+
+
+
+        // Insertion des données fictives dans la table 'materiels'
+        for (const material of fakeMaterials) {
+            await mariadb.executeQuery(
+                `INSERT INTO materiels (nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel) 
+                 VALUES (?, ?, ?, ?, ?, ?)`,
+                material
+            );
+        }
+
+        res.status(200).json({ message: 'Données fictives de matériels ajoutées avec succès' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Erreur lors de l\'ajout des données de matériels' });
+    }
+});
+
 
 
 //login-page
@@ -183,22 +197,7 @@ app.get(`/user-details/:id`, (req, res) => {
 
 // Get equipments
 // Pour recuperer les données de la base de données
-app.get('/equipment-page/data', (req, res) => {
-    res.json(
-        [
-            { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/100" },
-            { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/100" },
-            { id: 1, name: "Samsung A11", image: "https://via.placeholder.com/100" },
-            { id: 2, name: "Apple iPad 2 ", image: "https://via.placeholder.com/100" },
-            { id: 1, name: "Samsung A12", image: "https://via.placeholder.com/100" },
-            { id: 2, name: "Apple iPad 3", image: "https://via.placeholder.com/100" },
-            { id: 1, name: "Samsung A13", image: "https://via.placeholder.com/100" },
-            { id: 2, name: "Apple iPad 4", image: "https://via.placeholder.com/100" },
-            { id: 1, name: "Samsung A14", image: "https://via.placeholder.com/100" },
-            { id: 2, name: "Apple iPad 5", image: "https://via.placeholder.com/100" },
-        ]
-    )
-});
+app.get('/equipment-page/data', getBDDInfo('SELECT * FROM materiels'));
 
 
 
@@ -218,6 +217,24 @@ app.get('/user-management/data', (req, res) => {
 });
 
 
+function getBDDInfo(filter) {
+    return async (req, res) => {
+        let connection;
+        try {
+            connection = await mariadb.pool.getConnection();
+
+            // Exécute directement la requête SQL passée dans `filter`
+            const rows = await connection.query(filter);
+
+            res.status(200).json({ message: `Résultats pour la requête: ${filter}`, data: rows });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Erreur serveur');
+        } finally {
+            if (connection) connection.release();
+        }
+    };
+}
 
 
 
