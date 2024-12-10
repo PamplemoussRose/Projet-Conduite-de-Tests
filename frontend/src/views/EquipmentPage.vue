@@ -63,10 +63,16 @@
     },
     computed: {
       filteredEquipment() {
-        return this.equipment.filter((equipment) =>
-            equipment.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      },
+        if (Array.isArray(this.equipment)) {
+          return this.equipment.filter((equipment) =>
+              equipment.name && equipment.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+        } else {
+          console.warn('this.equipment n\'est pas un tableau', this.equipment);
+          return [];
+        }
+
+    },
       buttonText() {
         if (this.status === "offline") return "Log In";
         if (this.status === "user") return "Log Out";
