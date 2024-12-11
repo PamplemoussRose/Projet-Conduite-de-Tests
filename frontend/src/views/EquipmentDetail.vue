@@ -30,6 +30,7 @@
   export default {
     data() {
       return {
+        loginRole: '',
         equipment: {
           id: null,
           name: "",
@@ -43,10 +44,16 @@
       };
     },
 
-    mounted() {
+    async mounted() {
       if (auth.currentUser == null) {
         window.location.href = 'http://localhost:3000/';
       }
+      const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+        withCredentials: true, // Important si vous utilisez credentials dans CORS
+      });
+
+      // Récupérer le rôle de l'utilisateur depuis la réponse
+      this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
 
       const equipmentId = this.$route.params.id;
       axios.get(`http://localhost:3000/equipment-detail/${equipmentId}`)

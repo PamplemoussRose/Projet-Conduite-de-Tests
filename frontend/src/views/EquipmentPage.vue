@@ -21,12 +21,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(equipment, index) in filteredEquipment" :key="index" @click="goToEquipmentDetail(equipment.id)" class="clickable-row">
-              <td><img :src="equipment.image" alt="Equipment Image" class="equipment-image" /></td>
-              <td>{{ equipment.name }}</td>
-              <td><button class="add-button" @click.stop="Actionmodify(equipment.id)">Modify</button></td>
-              <td><button class="add-button" @click.stop="Actiondelete(equipment.id)">Delete</button></td>
-            </tr>
+          <tr v-for="(equipment, index) in equipment" :key="index" @click="goToEquipmentDetail(equipment.IdMateriel)" class="clickable-row">
+
+            <td><img :src="equipment.photoMateriel" alt="Equipment Image" class="equipment-image" /></td>
+            <td>{{ equipment.nomMateriel }}</td>
+            <td><button class="add-button" @click.stop="Actionmodify(equipment.IdMateriel)">Modify</button></td>
+            <td><button class="add-button" @click.stop="Actiondelete(equipment.IdMateriel)">Delete</button></td>
+          </tr>
+
 
           </tbody>
         </table>
@@ -57,22 +59,11 @@
     data() {
       return {
         searchQuery: "",
-        status: "admin",
+        loginRole: "",
         equipment: [],
       };
     },
     computed: {
-      filteredEquipment() {
-        if (Array.isArray(this.equipment)) {
-          return this.equipment.filter((equipment) =>
-              equipment.name && equipment.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-          );
-        } else {
-          console.warn('this.equipment n\'est pas un tableau', this.equipment);
-          return [];
-        }
-
-    },
       buttonText() {
         if (this.status === "offline") return "Log In";
         if (this.status === "user") return "Log Out";
@@ -116,17 +107,25 @@
       getEquipmentData() {
         axios.get('http://localhost:3000/equipment-page/data')
             .then(response => {
-              this.equipment = response.data;
+              this.equipment = response.data.data; // Utilise les données directement sans transformation
             })
             .catch(error => {
               console.error('Erreur lors de la récupération des données :', error);
             });
-      },
+      }
     },
-    mounted() {
-      if(auth.currentUser == null) {
+    async mounted() {
+      if (auth.currentUser == null) {
         window.location.href = 'http://localhost:3000/';
       }
+
+      const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+        withCredentials: true, // Important si vous utilisez credentials dans CORS
+      });
+
+      // Récupérer le rôle de l'utilisateur depuis la réponse
+      this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
+
       this.getEquipmentData();
     }
   };

@@ -38,11 +38,13 @@
 <script>
 import {auth} from "@/firebase";
 import {signOut} from "firebase/auth";
+import axios from "axios";
 
 export default {
   props: ['id'],
   data() {
     return {
+      loginRole: '',
       users: [
         { id: '001', firstName: 'Jaafar', lastName: 'Ghiffi', role: 'User' },
         { id: '002', firstName: 'Thomas', lastName: 'Vanwalleghem', role: 'User' },
@@ -76,10 +78,17 @@ export default {
       window.location.href = `http://localhost:3000/user-login`;
     },
   },
-  mounted() {
-     if(auth.currentUser == null){
-       window.location.href = 'http://localhost:3000/';
-     }
+  async mounted() {
+    if (auth.currentUser == null) {
+      window.location.href = 'http://localhost:3000/';
+    }
+
+    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+      withCredentials: true, // Important si vous utilisez credentials dans CORS
+    });
+
+    // Récupérer le rôle de l'utilisateur depuis la réponse
+    this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
   }
 };
 </script>

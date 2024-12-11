@@ -38,6 +38,7 @@
 <script>
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -45,7 +46,7 @@ export default {
       password: '',
       error: '',
       success: '',
-      loginRole: 'admin'
+      loginRole: ''
     };
   },
   methods: {
@@ -54,16 +55,30 @@ export default {
         // Authentification de l'utilisateur
         const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
         const user = userCredential.user; // Objet utilisateur connecté
+        // Vérifier si l'email de l'utilisateur est vérifié
+        if (user) {
+          // Envoi de la requête pour récupérer le rôle
+          const response = await axios.get(`http://localhost:3000/get-role?email=${this.email}`, {
+            withCredentials: true, // Important si vous utilisez credentials dans CORS
+          });
 
-        if (user.uid == "JbXDW4NoXdRLaYRxhCKwv48iWDr1"){
-          window.location.href = "http://localhost:3000/admin-dashboard";
-        }else {
-          window.location.href = "http://localhost:3000/equipment-page";
+          // Récupérer le rôle de l'utilisateur depuis la réponse
+          const role = response.data.data; // Le rôle est dans `data` selon ton backend
+
+          // Rediriger selon le rôle
+          if (role === 'ADMINISTRATEUR') {
+            window.location.href = "http://localhost:3000/admin-dashboard";
+          } else {
+            window.location.href = "http://localhost:3000/equipment-page";
+          }
+        } else {
+          console.log("Email non vérifié.");
+          // Tu peux rediriger ou afficher un message pour demander la vérification de l'email
         }
       } catch (error) {
         // Gestion des erreurs
-        console.error("Erreur de connexion :", error.message);
-        this.error = "Impossible de se connecter. Veuillez vérifier vos identifiants.";
+        console.error("Erreur :", error.message);
+        this.error = "Une erreur s'est produite. Veuillez vérifier vos identifiants.";
       }
     },
   }

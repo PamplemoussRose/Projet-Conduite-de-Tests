@@ -21,15 +21,12 @@ app.use(cors(corsOptions));
 
 
 
-// Exemple appel a la bdd : app.get('/bdd', getBDDInfo('SELECT * FROM utilisateurs'));   bien sur on peut mettre n'importe qu'elle requette sql
-
-
 
 app.get('/add-fake-users', async (req, res) => {
     try {
         const fakeUsers = [
-            ['Dupont', 'Jean', 'jean.dupont@example.com', 'MAT0001', 'EMPRUNTEUR'], // Changer 'USER' en 'EMPRUNTEUR'
-            ['Martin', 'Sophie', 'sophie.martin@example.com', 'MAT0002', 'ADMINISTRATEUR'], // Changer 'ADMIN' en 'ADMINISTRATEUR'
+            ['Robin', 'Lmn', 'test@mail.com', 'MAT0003', 'EMPRUNTEUR'], // Changer 'USER' en 'EMPRUNTEUR'
+            ['Thomas', 'Vlg', 'user@example.com', 'MAT0004', 'ADMINISTRATEUR'], // Changer 'ADMIN' en 'ADMINISTRATEUR'
         ];
 
 
@@ -195,26 +192,53 @@ app.get(`/user-details/:id`, (req, res) => {
 //PUT
 
 
-// Get equipments
+// Get equipment data
 // Pour recuperer les données de la base de données
-app.get('/equipment-page/data', getBDDInfo('SELECT * FROM materiels'));
+app.get('/equipment-page/data', getBDDInfo('SELECT nomMateriel,photoMateriel FROM materiels'));
 
 
-
-// Get users
+// Get users data
 // Pour recuperer les données de la base de données
-app.get('/user-management/data', (req, res) => {
-    res.json(
-        [
-            { firstName: "Jaafar", lastName: "Ghiffi", id: "001", email: "jaafar@example.com", role: "Admin" },
-            { firstName: "Thomas", lastName: "Vanwalleghem", id: "002", email: "thomas@example.com", role: "User" },
-            { firstName: "Chaimae", lastName: "Chaaibi", id: "003", email: "clara@example.com", role: "User" },
-            { firstName: "Clara", lastName: "Rouxel", id: "004", email: "chaimae@example.com", role: "Admin" },
-            { firstName: "Robin", lastName: "Laumonier", id: "005", email: "robin@example.com", role: "User" },
-            { firstName: "N’Woumbornam", lastName: "N’Kouba", id: "006", email: "nwoumbornam@example.com", role: "User" }
-        ]
-    )
+app.get('/user-management/data',getBDDInfo('SELECT * FROM utilisateurs'));
+
+//app.get('/user-management/data',getBDDInfo('SELECT nomUtilisateur,idUtilisateur FROM utilisateurs'));
+
+
+app.get('/get-role', async (req, res) => {
+    let email = req.query.email;
+
+    if (!email) {
+        return res.status(400).send('Email requis');
+    }
+
+    let requette = 'SELECT roleUtilisateur FROM utilisateurs WHERE emailUtilisateur = ?';
+    let connection;
+
+    try {
+        // Obtenir une connexion à la base de données
+        connection = await mariadb.pool.getConnection();
+
+        // Exécuter la requête SQL avec les paramètres
+        const rows = await connection.query(requette, [email]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        res.status(200).json({
+            message: 'Rôle utilisateur récupéré avec succès',
+            data: rows[0].roleUtilisateur, // Retourne uniquement le rôle
+        });
+    } catch (err) {
+        console.error('Erreur serveur :', err);
+        res.status(500).send('Erreur serveur');
+    } finally {
+        if (connection) connection.release(); // Toujours libérer la connexion
+    }
 });
+
+
+
 
 
 function getBDDInfo(filter) {
