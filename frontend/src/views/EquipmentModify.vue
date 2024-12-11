@@ -43,10 +43,12 @@
 <script>
 import {auth} from "@/firebase";
 import {signOut} from "firebase/auth";
+import axios from "axios";
 
 export default {
   data() {
     return {
+      loginRole: "",
       equipment: {
         id: null,
         name: "My Equipment",
@@ -76,10 +78,16 @@ export default {
     };
   },
   /*get user according to his id in the url*/
-  mounted() {
-    if(auth.currentUser == null){
+  async mounted() {
+    if (auth.currentUser == null) {
       window.location.href = 'http://localhost:3000/';
     }
+
+    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+      withCredentials: true, // Important si vous utilisez credentials dans CORS
+    });
+    this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
+
     const equipmentId = parseInt(this.$route.params.id); // Récupère l'ID de l'URL
     this.equipment = this.equipments.find(e => e.id === equipmentId); // Trouve l'équipement
     if (!this.equipment) {

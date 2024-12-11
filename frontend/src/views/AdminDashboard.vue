@@ -30,10 +30,12 @@
 <script>
 import { signOut } from "firebase/auth";
 import {auth} from "@/firebase";
+import axios from "axios";
 
 export default {
   data() {
     return {
+      loginRole: '',
       recentActivities: ["Logged in", "Added new equipment", "Updated user permissions"], // Example activities
     };
   },
@@ -46,10 +48,16 @@ export default {
       window.location.href = `http://localhost:3000${route}`;
     },
   },
-  mounted() {
-    if(auth.currentUser == null){
+  async mounted() {
+    if (auth.currentUser == null) {
       window.location.href = 'http://localhost:3000/';
     }
+    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+      withCredentials: true, // Important si vous utilisez credentials dans CORS
+    });
+
+    // Récupérer le rôle de l'utilisateur depuis la réponse
+    this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
   }
 };
 </script>

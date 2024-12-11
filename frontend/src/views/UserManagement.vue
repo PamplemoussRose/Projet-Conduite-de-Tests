@@ -46,10 +46,10 @@
             </thead>
             <tbody>
   <tr v-for="(user, index) in users" :key="index">
-    <td @click="goToUserDetails(user.id)" style="cursor: pointer;">
-      {{ user.lastName }}
+    <td @click="goToUserDetails(user.idUtilisateur)" style="cursor: pointer;">
+      {{ user.nomUtilisateur }}
     </td>
-    <td>{{ user.id }}</td>
+    <td>{{ user.idUtilisateur }}</td>
   </tr>
 </tbody>
 
@@ -73,7 +73,7 @@
           lastName: '',
           id: '',
           email: '',
-          role: 'User'
+          loginRole: ''
         },
         errorMessage: '',
         users: []
@@ -107,7 +107,7 @@
       getUserData() {
         axios.get('http://localhost:3000/user-management/data')
             .then(response => {
-              this.users = response.data;
+              this.users = response.data.data;
             })
             .catch(error => {
               console.error('Erreur lors de la récupération des données :', error);
@@ -118,10 +118,18 @@
         window.location.href = `http://localhost:3000/user-details/${userId}`;
       },
     },
-    mounted() {
-      if(auth.currentUser == null){
+    async mounted() {
+      if (auth.currentUser == null) {
         window.location.href = 'http://localhost:3000/';
       }
+
+      const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+        withCredentials: true, // Important si vous utilisez credentials dans CORS
+      });
+
+      // Récupérer le rôle de l'utilisateur depuis la réponse
+      this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
+
       this.getUserData();
     }
   };
