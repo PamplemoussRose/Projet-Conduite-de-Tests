@@ -140,47 +140,21 @@ app.get('/equipment-detail/:id', (req, res) => {
     res.redirect(`http://localhost:8080/equipment-detail/${id}`);
 });
 
-
-
-app.get('/equipment-detail/data/:id', async (req, res) => {
-    let connection;
-    try {
-        connection = await mariadb.pool.getConnection();
-        const id = req.params.id;
-        const rows = await connection.query('SELECT * FROM materiels WHERE IdMateriel = ?', [id]);
-
-        if (rows.length > 0) {
-            res.status(200).json({ message: 'Données récupérées avec succès', data: rows[0] });
-        } else {
-            res.status(404).send('Équipement non trouvé');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur serveur');
-    } finally {
-        if (connection) connection.release();
-    }
-});
-
-
-
-
-
 //POST
     app.post(`/equipment-detail/:id`, (req, res) => {
         res.json({message: `Je suis POST de detail!`});
     });
 
 
+
 //equipment-modify
 
 //GET
-    app.get(`/equipment-modify/:id`, (req, res) => {
-        const id = req.params.id;
-        const viewName = req.query.view || `equipment-modify`;
-        res.set(id);
-        res.redirect(`http://localhost:8080/${viewName}`);
-    });
+app.get(`/equipment-modify/:id`, (req, res) => {
+      const id = req.params.id;
+
+      res.redirect(`http://localhost:8080/equipment-modify/${id}`);
+});
 
 
 //user-management
@@ -223,6 +197,32 @@ app.get('/equipment-detail/data/:id', async (req, res) => {
 // Get users data
 // Pour recuperer les données de la base de données
     app.get('/user-management/data', getBDDInfo('SELECT * FROM utilisateurs'));
+
+
+
+//Get equipement detail data
+// Pour recuperer les données de la base de données
+app.get('/equipment-detail/data/:id', async (req, res) => {
+    let connection;
+    try {
+        connection = await mariadb.pool.getConnection();
+        const id = req.params.id;
+        const rows = await connection.query('SELECT * FROM materiels WHERE IdMateriel = ?', [id]);
+
+        if (rows.length > 0) {
+            res.status(200).json({ message: 'Données récupérées avec succès', data: rows[0] });
+        } else {
+            res.status(404).send('Équipement non trouvé');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erreur serveur');
+    } finally {
+        if (connection) connection.release();
+    }
+});
+
+
 
 
 //app.get('/user-management/data',getBDDInfo('SELECT nomUtilisateur,idUtilisateur FROM utilisateurs'));

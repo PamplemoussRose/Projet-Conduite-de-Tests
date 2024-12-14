@@ -1,139 +1,98 @@
 <template>
-  <div class="user-modify-container">
-    <header class="user-modify-header">
+  <div class="equipment-modify-container">
+    <header class="equipment-modify-header">
       <h1 class="title">Equipment Modify</h1>
       <button class="back-button" @click="goToPage">Back</button>
       <button @click="logout" class="logout-button">Logout</button>
     </header>
 
-    <div class="user-modify">
+    <div class="equipment-modify">
 
-      <!-- Formulaire pour afficher le matériel -->
-      <!--Il faut qu'il y ai version reference phone number et date de borrwowed-->
-      <div class="user-form">
+      <!-- Formulaire pour afficher et modifier les informations de l'équipement -->
+      <div class="equipment-form">
+        <div class="form-field">
+          <p>Equipment Name</p>
+          <input type="text" v-model="equipment.nomMateriel" id="nomMateriel" />
+        </div>
         <div class="form-field">
           <p>Version</p>
-          <p class="infoEquipment">{{ equipment.name }}</p>
-          <input type="text" v-model="name" id="name"/>
+          <input type="text" v-model="equipment.versionMateriel" id="versionMateriel" />
         </div>
         <div class="form-field">
           <p>Reference</p>
-          <p class="infoEquipment">{{ equipment.reference }}</p>
-          <input type="text" v-model="reference" id="reference"/>
+          <input type="text" v-model="equipment.referenceMateriel" id="referenceMateriel" />
         </div>
         <div class="form-field">
-          <p>Phone number</p>
-          <p class="infoEquipment">{{ equipment.phoneNumber }}</p>
-          <input type="text" v-model="phoneNumber" id="phoneNumber" />
+          <p>State</p>
+          <select v-model="equipment.etatMateriel" id="etatMateriel">
+            <option value="DISPONIBLE">Available</option>
+            <option value="EMPRUNTER">Borrowed</option>
+          </select>
         </div>
         <div class="form-field">
-          <p>Borrowed date</p>
+          <p>Phone Number</p>
+          <input type="text" v-model="equipment.numeroTelephoneMateriel" id="numeroTelephoneMateriel" />
         </div>
+        <div class="form-field">
+          <p>Photo URL</p>
+          <input type="text" v-model="equipment.photoMateriel" id="photoMateriel" />
+        </div>
+
+        <!-- Affichage de l'erreur si nécessaire -->
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        <button class="add-button" @click="modifyButton">{{ buttonLabel }}</button>
+
+        <!-- Bouton pour envoyer les modifications -->
+        <button class="modify-button" @click="modifyButton">Save Changes</button>
       </div>
 
-      <div class="user-table">
-        <img :src="equipment.image" alt="Equipment Image" class="equipment-image" />
+      <div class="equipment-image-container">
+        <!-- Affichage de l'image de l'équipement -->
+        <img :src="equipment.photoMateriel" alt="Equipment Image" class="equipment-image" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {auth} from "@/firebase";
-import {signOut} from "firebase/auth";
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      loginRole: "",
       equipment: {
-        id: null,
-        name: "My Equipment",
-        image: "https://via.placeholder.com/300",
-        version: "1.0",
-        reference: "XYZ123",
-        phoneNumber: "123-456-7890",
+        nomMateriel: '',
+        versionMateriel: '',
+        referenceMateriel: '',
+        etatMateriel: 'DISPONIBLE',  // Valeur par défaut
+        photoMateriel: '',
+        numeroTelephoneMateriel: '',
       },
-      beginDate: "",
-      endDate: "",
-      isDisabled: true,
-      equipments: [
-        /*there is a foreign key for the user who borrowed*/
-        { id: 1, name: "Samsung A10", image: "https://via.placeholder.com/300", idBorrower: 2},
-        { id: 2, name: "Apple iPad", image: "https://via.placeholder.com/100", idBorrower: 2},
-        { id: 1, name: "Samsung A11", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 2, name: "Apple iPad 2 ", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 1, name: "Samsung A12", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 2, name: "Apple iPad 3", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 1, name: "Samsung A13", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 2, name: "Apple iPad 4", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 1, name: "Samsung A14", image: "https://via.placeholder.com/100", idBorrower: 1},
-        { id: 2, name: "Apple iPad 5", image: "https://via.placeholder.com/100", idBorrower: 1},
-      ],
       errorMessage: '',
-
     };
   },
-  /*get user according to his id in the url*/
   async mounted() {
-    if (auth.currentUser == null) {
-      window.location.href = 'http://localhost:3000/';
-    }
-
-    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
-      withCredentials: true, // Important si vous utilisez credentials dans CORS
-    });
-    this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
-    if (this.loginRole !== "ADMINISTRATEUR") {
-      window.location.href = 'http://localhost:8080/equipment-page';
-    }
-
-
-    const equipmentId = parseInt(this.$route.params.id); // Récupère l'ID de l'URL
-    this.equipment = this.equipments.find(e => e.id === equipmentId); // Trouve l'équipement
-    if (!this.equipment) {
-      this.errorMessage = "Equipment not found.";
-    }
+    // Récupérer les informations de l'équipement basé sur l'ID
+    const getdata = await axios.get(`http://localhost:3000/equipment-detail/data/${this.$route.params.id}`);
+    this.equipment = getdata.data.data;
   },
-  computed: {
-    buttonLabel() {
-      return this.isDisabled ? "Modify" : "Validate";
-    },
-  },
-
   methods: {
-    async logout() {
-      // Debug pour deconnection (ou pas)
-      alert("Logged out!");
-      await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
-    },
     goToPage() {
-      // Redirige vers une autre page avec l'URL "/other-page"
-      window.location.href = `http://localhost:3000/equipment-page`;
+      window.location.href = 'http://localhost:8080/equipment-page';
     },
-    modifyButton(){
-      if (this.isDisabled === true){
-        this.isDisabled = false;
-      }
-      else {
-        /*Ici cela doit récupérer les informations entrées
-        * les modifier dans la base de données
-        * et donc les modifier dans l'affichage aussi */
-        alert("Bouton validation");
-        this.isDisabled = true;
-      }
+    async modifyButton() {
 
-    }
-  }
+    },
+    logout() {
+      alert("Logged out!");
+      // Log out logic here
+    },
+  },
 };
 </script>
 
 <style scoped>
-.user-modify-container {
+
+.equipment-modify-container {
   max-width: 800px;
   margin: auto;
   padding: 2rem;
@@ -148,7 +107,7 @@ export default {
   white-space: normal;
   font-weight: bold;
 }
-.user-modify-header {
+.equipment-modify-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -182,7 +141,7 @@ export default {
   background-color: #978897;
 }
 
-.modif-button{
+.modify-button{
   background-color: darkgreen;
   padding: 1rem 1.5rem;
 }
@@ -192,12 +151,12 @@ export default {
   margin-bottom: 1rem;
 }
 
-.user-modify {
+.equipment-modify {
   display: flex;
   justify-content: space-between;
 }
 
-.user-form {
+.equipment-form {
   flex: 1;
   max-width: 300px;
   margin-right: 2rem;
@@ -224,7 +183,7 @@ input, select {
   width: 100%;
 }
 
-.add-button {
+.modify-button {
   border: none;
   color: #fff;
   background-image: linear-gradient(30deg, #7D5C97, #A693C4);
@@ -237,7 +196,7 @@ input, select {
   transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-.add-button:hover {
+.modify-button:hover {
   background-position: right center;
   background-size: 200% auto;
   -webkit-animation: pulse 1.5s infinite;
@@ -264,7 +223,7 @@ input, select {
 
 
 
-.user-table {
+.equipment-table {
   flex: 2;
   max-width: 400px;
   overflow-y: auto;
