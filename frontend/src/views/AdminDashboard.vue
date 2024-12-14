@@ -15,15 +15,6 @@
         </li>
       </ul>
     </nav>
-
-    <section class="dashboard-content">
-      <h2>Recent Activity</h2>
-      <ul class="activity-list">
-        <li v-for="(activity, index) in recentActivities" :key="index">
-          {{ activity }}
-        </li>
-      </ul>
-    </section>
   </div>
 </template>
 
@@ -58,6 +49,9 @@ export default {
 
     // Récupérer le rôle de l'utilisateur depuis la réponse
     this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
+    if (this.loginRole !== "ADMINISTRATEUR") {
+        window.location.href = 'http://localhost:8080/equipment-page';
+    }
   }
 };
 </script>
