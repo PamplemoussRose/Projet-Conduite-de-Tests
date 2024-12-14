@@ -30,9 +30,10 @@ const routes = [
   },
 
   {
-    path: '/equipment-modify',
+    path: '/equipment-modify/:id',
     name: 'EquipmentModify',
     component: EquipmentModify,
+    props: true,
   },
 
   {
