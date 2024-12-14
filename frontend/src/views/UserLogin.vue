@@ -12,17 +12,6 @@
           <input type="password" v-model="password" id="password" required />
         </div>
 
-        <!-- Juste la pour debug pour l'instant -->
-        <div class="debug-controls">
-          <p class="debug-label">Juste pour le debug</p>
-          <label>
-            <input type="radio" value="admin" v-model="loginRole" /> Admin
-          </label>
-          <label>
-            <input type="radio" value="user" v-model="loginRole" /> User
-          </label>
-        </div>
-
         <button type="submit">Log In</button>
       </form>
       <p v-if="error" class="error">{{ error }}</p>

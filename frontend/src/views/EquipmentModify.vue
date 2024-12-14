@@ -87,6 +87,10 @@ export default {
       withCredentials: true, // Important si vous utilisez credentials dans CORS
     });
     this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
+    if (this.loginRole !== "ADMINISTRATEUR") {
+      window.location.href = 'http://localhost:8080/equipment-page';
+    }
+
 
     const equipmentId = parseInt(this.$route.params.id); // Récupère l'ID de l'URL
     this.equipment = this.equipments.find(e => e.id === equipmentId); // Trouve l'équipement

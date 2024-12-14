@@ -42,11 +42,12 @@ const routes = [
     props: true
   },
 
-  { path: '/equipment-detail',
+  {
+    path: '/equipment-detail/:id',
     name: 'EquipmentDetail',
     component: EquipmentDetail,
-    props: true },
-
+    props: true,
+  },
 
 ];
 
