@@ -30,7 +30,7 @@
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
           <form action="http://localhost:3000/user-management" method="POST">
             <input type="hidden" name="key" value="value">
-            <button type="submit" @click="addUser" class="add-button">Add User</button>
+            <button type="submit" @click="addUser(newUser.email,newUser.id)" class="add-button">Add User</button>
           </form>
         </div>
 
@@ -45,15 +45,13 @@
               </tr>
             </thead>
             <tbody>
-  <tr v-for="(user, index) in users" :key="index">
-    <td @click="goToUserDetails(user.idUtilisateur)" style="cursor: pointer;">
-      {{ user.nomUtilisateur }}
-    </td>
-    <td>{{ user.idUtilisateur }}</td>
-  </tr>
-</tbody>
-
-
+              <tr v-for="(user, index) in users" :key="index">
+                <td @click="goToUserDetails(user.idUtilisateur)" style="cursor: pointer;">
+                  {{ user.nomUtilisateur }}
+                </td>
+                <td>{{ user.idUtilisateur }}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -90,20 +88,35 @@
         // Redirige vers une autre page avec l'URL "/other-page"
         window.location.href = 'http://localhost:3000/admin-dashboard';
       },
-      addUser() {
+      addUser(email, id) {
+        console.log(id);
+        console.log(email);
+        // Créer un formulaire dynamique
         const form = document.createElement('form');
-        form.action = 'http://localhost:3000/user-management';
+        form.action = 'http://localhost:3000/user-management'; // URL de votre backend
         form.method = 'POST';
 
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'key';
-        input.value = 'value';
-        form.appendChild(input);
+        // Créer un champ caché pour l'email
+        const emailInput = document.createElement('input');
+        emailInput.type = 'hidden';
+        emailInput.name = 'email'; // Nom du champ que le backend attend
+        emailInput.value = email; // Valeur de l'email
+        form.appendChild(emailInput);
 
+        // Créer un champ caché pour l'ID
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id'; // Nom du champ que le backend attend
+        idInput.value = id; // Valeur de l'ID
+        form.appendChild(idInput);
+
+        // Ajouter le formulaire au corps du document
         document.body.appendChild(form);
+
+        // Soumettre le formulaire
         form.submit();
       },
+
       getUserData() {
         axios.get('http://localhost:3000/user-management/data')
             .then(response => {

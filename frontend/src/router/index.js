@@ -7,6 +7,7 @@ import EquipmentPage from "@/views/EquipmentPage.vue";
 import EquipmentModify from "@/views/EquipmentModify.vue";
 
 import { createRouter, createWebHistory } from 'vue-router';
+import EquipmentAdd from "@/views/EquipmentAdd.vue";
 const routes = [
   {
     path: '/',
@@ -28,6 +29,11 @@ const routes = [
     name: 'EquipmentPage',
     component: EquipmentPage,
   },
+  {
+    path: '/equipment-add',
+    name: 'EquipmentAdd',
+    component: EquipmentAdd,
+  },
 
   {
     path: '/equipment-modify/:id',
@@ -35,6 +41,8 @@ const routes = [
     component: EquipmentModify,
     props: true,
   },
+
+
 
   {
     path: '/user-details',

@@ -8,6 +8,8 @@
 
     </header>
 
+    <button class="add-equipment-button" v-if="loginRole === 'ADMINISTRATEUR'" @click="goToAddEquipment">Add Equipment</button>
+
     <div class="search-container">
       <input type="text" v-model="searchQuery" placeholder="Search" class="search-bar" />
     </div>
@@ -98,7 +100,9 @@
       goToEquipmentDetail(equipmentId) {
         window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
       },
-
+      goToAddEquipment(){
+        window.location.href = `http://localhost:3000/equipment-add`;
+      },
       getEquipmentData() {
         axios.get('http://localhost:3000/equipment-page/data')
             .then(response => {
@@ -159,7 +163,7 @@
   }
 
 
-  .logout-button , .login-button {
+  .logout-button , .login-button , .add-equipment-button {
     background-color: #B18FCF;
     color: white;
     padding: 0.5rem 1rem;
@@ -168,7 +172,7 @@
     cursor: pointer;
   }
 
-  .logout-button:hover , .login-button:hover{
+  .logout-button:hover , .login-button:hover , add-equipment-button{
     background-color: #978897;
   }
 

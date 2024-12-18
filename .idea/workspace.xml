@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="Données equipments et users dans le back (à remplacer par les request bdd">
+      <change afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentAdd.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentModify.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentModify.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +23,7 @@
       <list>
         <option value="Vue Single File Component" />
         <option value="JavaScript File" />
+        <option value="Vue Composition API Component" />
       </list>
     </option>
   </component>
@@ -53,29 +57,34 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.10.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/robin/OneDrive/Polytech/4A - Tours/Conduite de test/projet-conduite-de-tests&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;C:/Users/vanwa/AppData/Roaming/JetBrains/WebStorm2024.2/node/versions/22.11.0/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "javascript.nodejs.core.library.configured.version": "22.11.0",
+    "javascript.nodejs.core.library.typings.version": "22.10.1",
+    "last_opened_file_path": "C:/Users/robin/OneDrive/Polytech/4A - Tours/Conduite de test/projet-conduite-de-tests",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/vanwa/AppData/Roaming/JetBrains/WebStorm2024.2/node/versions/22.11.0/node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "vue.recent.templates": [
+      "Vue Composition API Component"
+    ]
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -109,7 +118,10 @@
       <workItem from="1733841589983" duration="139000" />
       <workItem from="1733906128662" duration="16505000" />
       <workItem from="1734013910889" duration="4895000" />
-      <workItem from="1734171220853" duration="15344000" />
+      <workItem from="1734171220853" duration="15512000" />
+      <workItem from="1734199367570" duration="3000" />
+      <workItem from="1734268915281" duration="4098000" />
+      <workItem from="1734533130735" duration="3984000" />
     </task>
     <task id="LOCAL-00001" summary="Données equipments et users dans le back (à remplacer par les request bdd">
       <option name="closed" value="true" />
