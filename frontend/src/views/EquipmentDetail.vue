@@ -53,7 +53,7 @@ export default {
     });
 
     this.loginRole = response.data.data;
-    if (this.loginRole !== "ADMINISTRATEUR") {
+    if (this.loginRole !== "ADMINISTRATEUR" && this.loginRole !== "EMPRUNTEUR") {
       window.location.href = 'http://localhost:8080/equipment-page';
     }
 

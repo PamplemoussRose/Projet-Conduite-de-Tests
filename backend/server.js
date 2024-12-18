@@ -5,7 +5,6 @@ const PORT = 3000;
 const cors = require('cors');
 const mariadb = require('../frontend/src/mariadb.js');
 
-
 const corsOptions = {
     origin: 'http://localhost:8080',
     methods: ['GET', 'POST'],
@@ -18,7 +17,8 @@ const corsOptions = {
 app.use(express.json());
 // CORS pour les requetes depuis le front
 app.use(cors(corsOptions));
-
+// Middleware pour parser les données du formulaire
+app.use(express.urlencoded({ extended: true }));
 
 
 
@@ -156,6 +156,14 @@ app.get(`/equipment-modify/:id`, (req, res) => {
       res.redirect(`http://localhost:8080/equipment-modify/${id}`);
 });
 
+//equipment-add
+
+//GET
+app.get('/equipment-add', (req, res) => {
+    res.redirect(`http://localhost:8080/equipment-add`);
+})
+
+
 
 //user-management
 
@@ -166,11 +174,29 @@ app.get(`/equipment-modify/:id`, (req, res) => {
     });
 
 //POST
-    app.post(`/user-management`, (req, res) => {
-        //create user using the field
-        const viewName = req.query.view || `user-management`;
-        res.redirect(`http://localhost:8080/${viewName}`);
-    });
+app.post('/user-management', async (req, res) => {
+    const { email, id } = req.body; // Récupérer l'email et l'ID du formulaire
+    let connection;
+    try {
+        // Vérifiez dans la base de données si l'email ou l'ID existe déjà
+        connection = await mariadb.pool.getConnection();
+        const rows = await connection.query('SELECT * FROM users WHERE emailUtilisateur = ? OR idUtilisateur = ?', [email, id]);
+
+        if (rows.length > 0) {
+            // Si l'email ou l'ID existe déjà, renvoyer une erreur
+            return res.status(400).json({ message: 'Email ou ID déjà utilisé' });
+        }
+        //il faut encore ajouter l'user a la bdd
+
+
+        // Renvoi d'une réponse de succès
+        res.status(201).json({ message: 'Utilisateur ajouté avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+});
+
 
 
 //user-detail
