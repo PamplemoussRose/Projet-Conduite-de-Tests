@@ -16,8 +16,11 @@ const corsOptions = {
 // Middleware pour gérer les requêtes JSON''
 app.use(express.json());
 // CORS pour les requetes depuis le front
-app.use(cors(corsOptions));
-// Middleware pour parser les données du formulaire
+app.use(cors({
+    origin: 'http://localhost:8080',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -108,23 +111,30 @@ app.get(`/equipment-page`, (req, res) => {
 });
 
 //DELETE
-app.delete(`/equipment-page/:id`, (req, res) => {
+app.delete(`/equipment-page/:id`, async (req, res) => {
     const id = req.params.id; // Récupération de l'ID depuis l'URL
-    res.set(id);
-    const viewName = `equipment-detail`;
-    res.redirect(`http://localhost:8080/${viewName}`);
-});
+    const requette = `DELETE FROM materiels WHERE IdMateriel = ${id}`;
 
-//PUT
-app.put('/equipment-page/:id', (req, res) => {
-    const id = req.params.id; // Récupération de l'ID depuis l'URL
-    const { key } = req.body; // Récupération des données envoyées dans le corps de la requête
+    try {
+        // Se connecter à la base de données
+        connection = await mariadb.pool.getConnection();
 
-    // Simulez un traitement ou une mise à jour dans la base de données
-    console.log(`ID reçu : ${id}, Donnée : ${key}`);
+        // Exécuter la requête de suppression
+        const result = await connection.query(requette);
 
-    // Répondez au client avec un statut 200
-    res.status(200).json({ message: `Équipement ${id} mis à jour avec succès`, data: { id, key } });
+        if (result.affectedRows === 0) {
+            // Si aucun utilisateur n'a été supprimé, renvoyer une erreur
+            return res.status(404).json({message: 'Utilisateur non trouvé'});
+        }
+
+        // Renvoi d'une réponse de succès
+        res.status(200).json({message: 'Utilisateur supprimé avec succès'});
+    } catch (error) {
+        console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+        res.status(500).json({message: 'Erreur serveur'});
+    } finally {
+        if (connection) connection.release(); // Libérer la connexion
+    }
 });
 
 
@@ -156,12 +166,66 @@ app.get(`/equipment-modify/:id`, (req, res) => {
       res.redirect(`http://localhost:8080/equipment-modify/${id}`);
 });
 
+//PUT
+app.put(`/equipment-modify/:id`, async (req, res) => {
+    const id = req.params.id;
+    const {
+        nomMateriel,
+        versionMateriel,
+        referenceMateriel,
+        etatMateriel,
+        photoMateriel,
+        numeroTelephoneMateriel
+    } = req.body;
+
+    try {
+        const connection = await mariadb.pool.getConnection();
+        const result = await connection.execute(
+            `UPDATE materiels SET nomMateriel = ?, versionMateriel = ?, referenceMateriel = ?, etatMateriel = ?, photoMateriel = ?, numeroTelephoneMateriel = ? WHERE IdMateriel = ?`,
+            [nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({message: 'Équipement non trouvé'});
+        }
+
+        res.status(200).json({message: 'Équipement mis à jour'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: 'Erreur serveur'});
+    }
+})
+
 //equipment-add
 
 //GET
 app.get('/equipment-add', (req, res) => {
     res.redirect(`http://localhost:8080/equipment-add`);
 })
+
+//POST
+app.post('/equipment-add', async (req, res) => {
+    const { nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel } = req.body;
+
+    try {
+        // Se connecter à la base de données
+        const connection = await mariadb.pool.getConnection();
+
+        // Insérer un nouvel équipement dans la base de données
+        const result = await connection.execute(
+            `INSERT INTO materiels (nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel) 
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel]
+        );
+
+        res.status(201).json({ message: 'Équipement ajouté avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout de l\'équipement:', error);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+});
+
+
 
 
 
