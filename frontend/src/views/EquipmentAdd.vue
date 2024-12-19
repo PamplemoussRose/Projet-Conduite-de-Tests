@@ -49,6 +49,7 @@ export default {
         versionMateriel: '',
         referenceMateriel: '',
         numeroTelephoneMateriel: '',
+        etatMateriel: 'DISPONIBLE',
       },
       errorMessage: '',
     };
@@ -64,8 +65,35 @@ export default {
       // Redirige vers une autre page avec l'URL "/other-page"
       window.location.href = 'http://localhost:3000/equipment-page';
     },
-    addEquipment() {
-      //hey hey bah c pas fait encore hahaa !!!
+    async addEquipment() {
+      if (this.newEquipment.nomMateriel === '' || this.newEquipment.photoMateriel === '' || this.newEquipment.versionMateriel === '' || this.newEquipment.referenceMateriel === '' || this.newEquipment.numeroTelephoneMateriel === '') {
+        this.errorMessage = "Tous les champs sont obligatoires !";
+      }else if (this.newEquipment.nomMateriel.length < 1 || this.newEquipment.versionMateriel.length < 3 || this.newEquipment.referenceMateriel.length !== 5 || !/^\d{10}$/.test(this.newEquipment.numeroTelephoneMateriel)){
+        this.errorMessage = "Tous les champs doivent respecter les formats requis  !";
+      }
+      else {
+        try {
+          const response = await fetch('http://localhost:3000/equipment-add', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.newEquipment),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erreur lors de l\'ajout de l\'équipement');
+          }
+
+          const result = await response.json();
+          console.log('Équipement ajouté avec succès :', result.message);
+          window.location.href = 'http://localhost:8080/equipment-page';
+        } catch (error) {
+          console.error('Erreur :', error.message);
+          this.errorMessage = error.message;
+        }
+      }
     },
   },
   async mounted() {

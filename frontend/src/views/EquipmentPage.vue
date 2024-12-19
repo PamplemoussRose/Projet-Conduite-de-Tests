@@ -77,18 +77,14 @@
       Actionmodify(modifyId) {
         window.location.href = (`http://localhost:3000/equipment-modify/${modifyId}`)
       },
-      Actiondelete(deleteId) {
-        axios.delete(`http://localhost:3000/equipment-page/${deleteId}`)
-            .then(response => {
-              if (response.status === 200) {
-                console.log('Suppression réussie');
-              } else {
-                console.error('Erreur lors de la suppression');
-              }
-            })
-            .catch(error => console.error('Erreur réseau :', error));
-
-        console.log(this.equipment);
+      async Actiondelete(deleteId) {
+        try {
+          const response = await axios.delete(`http://localhost:3000/equipment-page/${deleteId}`);
+          console.log('Deleted successfully:', response.data);
+        } catch (error) {
+          console.error('Error deleting equipment:', error);
+        }
+        window.location.href = "http://localhost:3000/equipment-page";
       },
       handleButtonClick() {
         try {

@@ -80,8 +80,29 @@ export default {
       window.location.href = 'http://localhost:8080/equipment-page';
     },
     async modifyButton() {
+      try {
+        const response = await fetch(`http://localhost:3000/equipment-modify/${this.$route.params.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.equipment), // Envoie de l'objet equipment
+        });
 
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Erreur lors de l\'ajout de l\'équipement');
+        }
+
+        const result = await response.json();
+        console.log('Équipement ajouté avec succès :', result.message);
+      } catch (error) {
+        console.error('Erreur :', error.message);
+        this.errorMessage = error.message; // Met à jour le message d'erreur affiché
+      }
+      window.location.href = 'http://localhost:8080/equipment-page';
     },
+
     logout() {
       alert("Logged out!");
       // Log out logic here
