@@ -6,14 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="da634493-509e-4b98-b55c-e09de47aa30f" name="Changes" comment="Données equipments et users dans le back (à remplacer par les request bdd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/AdminDashboard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentAdd.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentModify.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentModify.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/EquipmentPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserDetails.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserDetails.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserLogin.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/UserManagement.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +24,7 @@
       <list>
         <option value="Vue Single File Component" />
         <option value="JavaScript File" />
+        <option value="Vue Composition API Component" />
       </list>
     </option>
   </component>
@@ -79,6 +79,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
+    ]
   }
 }</component>
   <component name="SharedIndexes">
@@ -112,7 +117,13 @@
       <workItem from="1733346799640" duration="3703000" />
       <workItem from="1733774371963" duration="4674000" />
       <workItem from="1733841589983" duration="139000" />
-      <workItem from="1733906128662" duration="16340000" />
+      <workItem from="1733906128662" duration="16505000" />
+      <workItem from="1734013910889" duration="4895000" />
+      <workItem from="1734171220853" duration="15512000" />
+      <workItem from="1734199367570" duration="3000" />
+      <workItem from="1734268915281" duration="4098000" />
+      <workItem from="1734533130735" duration="4158000" />
+      <workItem from="1734598726378" duration="6230000" />
     </task>
     <task id="LOCAL-00001" summary="Données equipments et users dans le back (à remplacer par les request bdd">
       <option name="closed" value="true" />

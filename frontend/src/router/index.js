@@ -7,6 +7,7 @@ import EquipmentPage from "@/views/EquipmentPage.vue";
 import EquipmentModify from "@/views/EquipmentModify.vue";
 
 import { createRouter, createWebHistory } from 'vue-router';
+import EquipmentAdd from "@/views/EquipmentAdd.vue";
 const routes = [
   {
     path: '/',
@@ -28,12 +29,20 @@ const routes = [
     name: 'EquipmentPage',
     component: EquipmentPage,
   },
+  {
+    path: '/equipment-add',
+    name: 'EquipmentAdd',
+    component: EquipmentAdd,
+  },
 
   {
-    path: '/equipment-modify',
+    path: '/equipment-modify/:id',
     name: 'EquipmentModify',
     component: EquipmentModify,
+    props: true,
   },
+
+
 
   {
     path: '/user-details',
@@ -42,11 +51,12 @@ const routes = [
     props: true
   },
 
-  { path: '/equipment-detail',
+  {
+    path: '/equipment-detail/:id',
     name: 'EquipmentDetail',
     component: EquipmentDetail,
-    props: true },
-
+    props: true,
+  },
 
 ];
 
