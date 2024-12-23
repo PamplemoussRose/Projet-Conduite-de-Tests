@@ -8,10 +8,10 @@
       </div>
 
       <div class="user-info">
-        <p><strong>Lastname:</strong> {{ lastname }}</p>
-        <p><strong>Firstname:</strong> {{ firstname }}</p>
+        <p><strong>Lastname:</strong> {{ user.nomUtilisateur }}</p>
+        <p><strong>Firstname:</strong> {{ user.prenomUtilisateur }}</p>
         <p><strong>Id:</strong> {{ userId }}</p>
-        <p><strong>Rôle:</strong> {{ role }}</p>
+        <p><strong>Rôle:</strong> {{ user.roleUtilisateur }}</p>
       </div>
 
       <div class="actions">
@@ -24,29 +24,40 @@
 
 <script>
 export default {
+  props: ['id'],
   data() {
     return {
-      lastname: "Doe",
-      firstname: "John",
-      userId: "12345",
-      role: "User",
+      userId: this.id,
+      user: {}, // Stocker les données utilisateur
     };
+  },
+  mounted() {
+    // Appelle l'API pour récupérer les données utilisateur
+    fetch(`http://localhost:3000/user-details/${this.userId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des données utilisateur');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.user = data;
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données utilisateur :', error);
+        });
   },
   methods: {
     goBack() {
-      // Logique pour revenir à la page précédente
-      console.log("Back button clicked");
+      this.$router.push('/user-management'); // Retour à la page précédente
     },
     logout() {
-      // Logique pour se déconnecter
       console.log("Log Out button clicked");
     },
     modifyUser() {
-      // Logique pour modifier les informations de l'utilisateur
       console.log("Modify button clicked");
     },
     deleteUser() {
-      // Logique pour supprimer l'utilisateur
       console.log("Delete button clicked");
     },
   },

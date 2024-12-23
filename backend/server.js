@@ -266,10 +266,28 @@ app.post('/user-management', async (req, res) => {
 //user-detail
 
 //GET
-    app.get(`/user-details/:id`, (req, res) => {
-        const viewName = req.query.view || `user-details`;
-        res.redirect(`http://localhost:8080/${viewName}`);
-    });
+app.get(`/user-details/:id`, async (req, res) => {
+    const id = req.params.id; // Récupère l'ID depuis l'URL
+    try {
+        const connection = await mariadb.pool.getConnection();
+        const rows = await connection.query(
+            'SELECT nomUtilisateur, prenomUtilisateur, roleUtilisateur FROM utilisateurs WHERE idUtilisateur = ?',
+            [id]
+        );
+
+        if (rows.length > 0) {
+            res.status(200).json(rows[0]); // Retourne uniquement l'utilisateur trouvé
+        } else {
+            res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+    } catch (err) {
+        console.error('Erreur serveur :', err);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+});
+
+
+
 
 
 //user-modify
