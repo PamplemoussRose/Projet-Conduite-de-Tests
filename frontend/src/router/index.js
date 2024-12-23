@@ -8,6 +8,7 @@ import EquipmentModify from "@/views/EquipmentModify.vue";
 
 import { createRouter, createWebHistory } from 'vue-router';
 import EquipmentAdd from "@/views/EquipmentAdd.vue";
+import UserModify from "@/views/UserModify.vue";
 const routes = [
   {
     path: '/',
@@ -45,9 +46,16 @@ const routes = [
 
 
   {
-    path: '/user-details',
+    path: '/user-details/:id',
     name: 'UserDetails',
     component: UserDetails,
+    props: true
+  },
+
+  {
+    path: '/user-modify/:id',
+    name: 'UserModify',
+    component: UserModify,
     props: true
   },
 
