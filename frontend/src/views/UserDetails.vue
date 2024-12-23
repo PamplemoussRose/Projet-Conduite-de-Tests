@@ -1,194 +1,138 @@
 <template>
-  <div class="form-container" v-if="user">
-    <div class="form-group">
-      <label for="lastname">Lastname</label>
-      <input type="text" id="lastname" v-model="user.lastName" placeholder="Lastname" />
-    </div>
+  <div class="user-detail-page">
+    <h2 class="page-title">UserDetail</h2>
+    <div class="user-detail">
+      <div class="header">
+        <button @click="goBack" class="back-button">Back</button>
+        <button @click="logout" class="logout-button">Log Out</button>
+      </div>
 
-    <div class="form-group">
-      <label for="firstname">Firstname</label>
-      <input type="text" id="firstname" v-model="user.firstName" placeholder="Firstname" />
-    </div>
+      <div class="user-info">
+        <p><strong>Lastname:</strong> {{ lastname }}</p>
+        <p><strong>Firstname:</strong> {{ firstname }}</p>
+        <p><strong>Id:</strong> {{ userId }}</p>
+        <p><strong>Rôle:</strong> {{ role }}</p>
+      </div>
 
-    <div class="form-group">
-      <label for="id">Id</label>
-      <input type="text" id="id" v-model="user.id" placeholder="Id" disabled />
-    </div>
-
-    <div class="form-group">
-      <label for="role">Admin</label>
-      <select id="role" v-model="user.role">
-        <option>User</option>
-        <option>Admin</option>
-      </select>
-    </div>
-
-    <div class="button-group">
-      <button @click="modifyUser" class="modify-button">Modify</button>
-      <button @click="deleteUser" class="delete-button">Delete</button>
+      <div class="actions">
+        <button @click="modifyUser" class="modify-button">Modify</button>
+        <button @click="deleteUser" class="delete-button">Delete</button>
+      </div>
     </div>
   </div>
-
-  <div v-else>
-    <p>User not found. Redirecting...</p>
-  </div>
-
 </template>
 
 <script>
-import {auth} from "@/firebase";
-import {signOut} from "firebase/auth";
-import axios from "axios";
-
 export default {
-  props: ['id'],
   data() {
     return {
-      loginRole: '',
-      users: [
-        { id: '001', firstName: 'Jaafar', lastName: 'Ghiffi', role: 'User' },
-        { id: '002', firstName: 'Thomas', lastName: 'Vanwalleghem', role: 'User' },
-        { id: '003', firstName: 'Chaaibi', lastName: 'Chaimae', role: 'User' },
-        { id: '004', firstName: 'Clara', lastName: 'Rouxel', role: 'User' },
-        { id: '004', firstName: 'Laumonier', lastName: 'Robbin', role: 'User' },
-        { id: '004', firstName: 'N \'Kouba', lastName: 'Humbert', role: 'User' },
-      ],
-      user: `001`,
+      lastname: "Doe",
+      firstname: "John",
+      userId: "12345",
+      role: "User",
     };
   },
-
   methods: {
-    goToPage() {
-      // Redirige vers une autre page avec l'URL "/other-page"
-      window.location.href = `http://localhost:3000/user-management`;
+    goBack() {
+      // Logique pour revenir à la page précédente
+      console.log("Back button clicked");
+    },
+    logout() {
+      // Logique pour se déconnecter
+      console.log("Log Out button clicked");
     },
     modifyUser() {
-      alert(`User ${this.user.firstName} ${this.user.lastName} modified!`);
+      // Logique pour modifier les informations de l'utilisateur
+      console.log("Modify button clicked");
     },
     deleteUser() {
-      if (confirm(`Are you sure you want to delete ${this.user.firstName} ${this.user.lastName}?`)) {
-        alert(`User ${this.user.firstName} ${this.user.lastName} deleted!`);
-        this.$router.push('/manage-users');
-      }
-    },
-    async logout() {
-      // Debug pour deconnection (ou pas)
-      alert("Logged out!");
-      await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
+      // Logique pour supprimer l'utilisateur
+      console.log("Delete button clicked");
     },
   },
-  async mounted() {
-    if (auth.currentUser == null) {
-      window.location.href = 'http://localhost:3000/';
-    }
-
-    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
-      withCredentials: true, // Important si vous utilisez credentials dans CORS
-    });
-
-    // Récupérer le rôle de l'utilisateur depuis la réponse
-    this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
-    if (this.loginRole !== "ADMINISTRATEUR") {
-      window.location.href = 'http://localhost:8080/equipment-page';
-    }
-  }
 };
 </script>
 
-<style scoped>
-.user-details-container {
+<style>
+body {
+  background-color: #e2e2ff;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+.user-detail-page {
   max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  padding: 2rem;
+  border-radius: 32px;
+  background: linear-gradient(225deg, #f2e8ff, #cbc3db);
+  box-shadow: -26px 26px 52px #c0b8cf, 26px -26px 52px #fffaff;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #494850;
+}
+
+.user-detail {
+  text-align: center;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
-.back-button,
-.logout-button {
-  padding: 10px 20px;
-  font-size: 14px;
-  background-color: #6200ea;
-  color: white;
+button {
   border: none;
-  border-radius: 5px;
+  color: #fff;
+  background-image: linear-gradient(30deg, #7D5C97, #A693C4);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 17px;
+  padding: 0.6em 1.5em;
   cursor: pointer;
+  transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-.back-button:hover,
-.logout-button:hover {
-  background-color: #3700b3;
+button:hover {
+  background-position: right center;
+  background-size: 200% auto;
+  animation: pulse 1.5s infinite;
 }
 
-.form-container {
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(125, 92, 151, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(125, 92, 151, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(125, 92, 151, 0);
+  }
+}
+
+.user-info {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #494850;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input,
-select {
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-input:disabled {
-  background-color: #e9e9e9;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.modify-button,
-.delete-button {
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  justify-content: space-around;
 }
 
 .modify-button {
-  background-color: #4caf50;
-  color: white;
-}
-
-.modify-button:hover {
-  background-color: #388e3c;
+  background-color: #4CAF50;
 }
 
 .delete-button {
-  background-color: #f44336;
-  color: white;
-}
-
-.delete-button:hover {
-  background-color: #d32f2f;
+  background-color: #F44336;
 }
 </style>
-
