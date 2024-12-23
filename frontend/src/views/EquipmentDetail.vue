@@ -1,97 +1,93 @@
 <template>
-    <div class="equipment-detail-page">
-      <button class="back-button" @click="goToPage">Back</button>
-      <button @click="logout" class="logout-button">Logout</button>
-      <h1>{{ equipment.name }}</h1>
-      <img :src="equipment.image" alt="Equipment Image" class="equipment-image" />
-  
-      <div class="equipment-info">
-        <p><strong>Version:</strong> {{ equipment.version }}</p>
-        <p><strong>Reference:</strong> {{ equipment.reference }}</p>
-        <p><strong>Phone number:</strong> {{ equipment.phoneNumber }}</p>
-      </div>
-  
-      <div class="date-selection">
-        <label for="begin-date">Begin:</label>
-        <input type="date" id="begin-date" v-model="beginDate" />
-        <label for="end-date">End:</label>
-        <input type="date" id="end-date" v-model="endDate" />
-      </div>
+  <div class="equipment-detail-page">
+    <button class="back-button" @click="goToPage">Back</button>
+    <button @click="logout" class="logout-button">Logout</button>
+    <h1>{{ equipmentData.nomMateriel }}</h1>
+    <img :src="equipmentData.photoMateriel" alt="Equipment Image" class="equipment-image" />
 
-      <button class="borrow-button" @click="post">Borrow</button>
+    <div class="equipment-info">
+      <p><strong>Version:</strong> {{ equipmentData.versionMateriel }}</p>
+      <p><strong>Reference:</strong> {{ equipmentData.referenceMateriel }}</p>
+      <p><strong>Phone number:</strong> {{ equipmentData.numeroTelephoneMateriel }}</p>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  import {auth} from "@/firebase";
-  import {signOut} from "firebase/auth";
 
-  export default {
-    data() {
-      return {
-        loginRole: '',
-        equipment: {
-          id: null,
-          name: "",
-          image: "https://via.placeholder.com/300",
-          version: "1.0",
-          reference: "XYZ123",
-          phoneNumber: "123-456-7890",
-        },
-        beginDate: "",
-        endDate: "",
-      };
-    },
+    <div class="date-selection">
+      <label for="begin-date">Begin:</label>
+      <input type="date" id="begin-date" v-model="beginDate" />
+      <label for="end-date">End:</label>
+      <input type="date" id="end-date" v-model="endDate" />
+    </div>
 
-    async mounted() {
-      if (auth.currentUser == null) {
-        window.location.href = 'http://localhost:3000/';
+    <button class="borrow-button" @click="post">Borrow</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
+
+export default {
+  data() {
+    return {
+      loginRole: '',
+      beginDate: '',
+      endDate: '',
+      equipmentData: {
+        nomMateriel: '',
+        photoMateriel: '',
+        versionMateriel: '',
+        referenceMateriel: '',
+        numeroTelephoneMateriel: '',
       }
-      const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
-        withCredentials: true, // Important si vous utilisez credentials dans CORS
-      });
+    };
+  },
 
-      // Récupérer le rôle de l'utilisateur depuis la réponse
-      this.loginRole = response.data.data; // Le rôle est dans `data` selon ton backend
-
-      const equipmentId = this.$route.params.id;
-      axios.get(`http://localhost:3000/equipment-detail/${equipmentId}`)
-          .then(response => {
-            console.log(response.data); // Vérifier la réponse
-            this.equipment.id = response.data.id; // Mettre à jour l'ID dans les données de l'équipement
-          })
-          .catch(error => console.error('Erreur :', error));
-    },
-
-
-    methods: {
-      async logout() {
-        // Debug pour deconnection (ou pas)
-        alert("Logged out!");
-        await signOut(auth);
-        window.location.href = `http://localhost:3000/user-login`;
-      },
-      goToPage() {
-        // Redirige vers une autre page avec l'URL "/other-page"
-        window.location.href = `http://localhost:3000/equipment-page`;
-      },
-      post() {
-        axios.post('http://localhost:3000/equipment-page', {
-          key: 'value'
-        })
-            .then(response => {
-              console.log(response.data);
-            })
-            .catch(error => {
-              console.error('Erreur :', error);
-            });
-      }
+  async mounted() {
+    if (auth.currentUser == null) {
+      window.location.href = 'http://localhost:3000/';
     }
-  };
-  </script>
-  
-  <style scoped>
+
+    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
+      withCredentials: true,
+    });
+
+    this.loginRole = response.data.data;
+    if (this.loginRole !== "ADMINISTRATEUR" && this.loginRole !== "EMPRUNTEUR") {
+      window.location.href = 'http://localhost:8080/equipment-page';
+    }
+
+    const getdata = await axios.get(`http://localhost:3000/equipment-detail/data/${this.$route.params.id}`);
+    this.equipmentData = getdata.data.data;
+  },
+
+  methods: {
+    async logout() {
+      alert("Logged out!");
+      await signOut(auth);
+      window.location.href = `http://localhost:3000/user-login`;
+    },
+    goToPage() {
+      window.location.href = `http://localhost:3000/equipment-page`;
+    },
+    post() {
+      axios.post('http://localhost:3000/equipment-page', {
+        key: 'value'
+      })
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.error('Erreur :', error);
+          });
+    }
+  }
+};
+</script>
+
+
+
+<style scoped>
   .equipment-detail-page {
     max-width: 800px;
     margin: auto;
