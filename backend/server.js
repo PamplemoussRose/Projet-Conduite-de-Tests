@@ -275,7 +275,10 @@ app.post('/user-management', async (req, res) => {
 //user-modify
 
 //GET
-
+app.get(`/user-modify/:id`, (req, res) => {
+    const viewName = req.query.view || `user-modify`;
+    res.redirect(`http://localhost:8080/${viewName}`);
+});
 //PUT
 
 
