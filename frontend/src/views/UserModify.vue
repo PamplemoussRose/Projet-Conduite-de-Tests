@@ -18,7 +18,7 @@
         </div>
         <div class="form-group">
           <label for="id">Id</label>
-          <input type="text" id="id" v-model="userId" placeholder="Id" required />
+          <input type="text" id="id" :value="id" readonly />
         </div>
         <div class="form-group">
           <label for="role">Rôle</label>
@@ -35,27 +35,31 @@
 </template>
 
 <script>
+import {signOut} from "firebase/auth";
+import {auth} from "@/firebase";
+
 export default {
+  props: ['id'],
   data() {
     return {
       lastname: "",
       firstname: "",
-      userId: "",
       role: "User",
     };
   },
   methods: {
     cancel() {
-      // Logique pour annuler et revenir en arrière
-      console.log("Cancel button clicked");
+      this.$router.push(`/user-details/${this.id}`);
     },
-    logout() {
-      // Logique pour se déconnecter
-      console.log("Log Out button clicked");
+    async logout() {
+      // Debug pour deconnection (ou pas)
+      alert("Logged out!");
+      await signOut(auth);
+      window.location.href = `http://localhost:3000/user-login`;
     },
     submitModify() {
       // Logique pour envoyer les modifications via une requête PUT
-      console.log("Form submitted:", this.lastname, this.firstname, this.userId, this.role);
+      console.log("Form submitted:", this.lastname, this.firstname, this.id, this.role);
     },
   },
 };

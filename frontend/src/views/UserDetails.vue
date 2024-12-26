@@ -23,6 +23,9 @@
 </template>
 
 <script>
+import {signOut} from "firebase/auth";
+import {auth} from "@/firebase";
+
 export default {
   props: ['id'],
   data() {
@@ -51,11 +54,14 @@ export default {
     goBack() {
       this.$router.push('/user-management'); // Retour à la page précédente
     },
-    logout() {
-      console.log("Log Out button clicked");
+    async logout() {
+      // Debug pour deconnection (ou pas)
+      alert("Logged out!");
+      await signOut(auth);
+      window.location.href = `http://localhost:3000/user-login`;
     },
     modifyUser() {
-      console.log("Modify button clicked");
+      this.$router.push(`/user-modify/${this.id}`);
     },
     deleteUser() {
       console.log("Delete button clicked");
