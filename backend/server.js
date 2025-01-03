@@ -400,4 +400,3 @@ app.get('/equipment-detail/data/:id', async (req, res) => {
     app.listen(PORT, () => {
         console.log(`Serveur backend lancé sur http://localhost:${PORT}`);
     });
-
