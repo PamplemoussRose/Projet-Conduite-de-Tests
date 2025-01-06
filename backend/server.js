@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const cors = require('cors');
-const mariadb = require('/Users/mac/Desktop/Polytech/S7/Conduite de projets/Autre/Projet-Conduite-de-Tests-1/backend/mariadb.js');
+const mariadb = require('./mariadb.js');
 const fs = require('fs');
 
 const corsOptions = {
@@ -561,7 +561,7 @@ app.get('/equipment-detail/data/:id', async (req, res) => {
             let connection;
             try {
                 connection = await mariadb.pool.getConnection();
-
+ 
                 // Exécute directement la requête SQL passée dans `filter`
                 const rows = await connection.query(filter);
 
