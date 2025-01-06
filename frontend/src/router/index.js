@@ -7,7 +7,6 @@ import EquipmentPage from "@/views/EquipmentPage.vue";
 import EquipmentModify from "@/views/EquipmentModify.vue";
 
 import { createRouter, createWebHistory } from 'vue-router';
-import EquipmentAdd from "@/views/EquipmentAdd.vue";
 import UserModify from "@/views/UserModify.vue";
 const routes = [
   {
@@ -29,11 +28,6 @@ const routes = [
     path: '/equipment-page',
     name: 'EquipmentPage',
     component: EquipmentPage,
-  },
-  {
-    path: '/equipment-add',
-    name: 'EquipmentAdd',
-    component: EquipmentAdd,
   },
 
   {

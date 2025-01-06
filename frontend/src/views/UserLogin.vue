@@ -39,35 +39,46 @@ export default {
     };
   },
   methods: {
-    async submitLogin() {
+        async submitLogin() {
       try {
         // Authentification de l'utilisateur
         const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
         const user = userCredential.user; // Objet utilisateur connecté
-        // Vérifier si l'email de l'utilisateur est vérifié
+
         if (user) {
-          // Envoi de la requête pour récupérer le rôle
-          const response = await axios.get(`http://localhost:3000/get-role?email=${this.email}`, {
-            withCredentials: true, // Important si vous utilisez credentials dans CORS
-          });
+          try {
+            // Envoi de la requête pour récupérer le rôle
+            const response = await axios.get(`http://localhost:3000/get-role?email=${this.email}`, {
+              withCredentials: true, // Important si vous utilisez credentials dans CORS
+            });
 
-          // Récupérer le rôle de l'utilisateur depuis la réponse
-          const role = response.data.data; // Le rôle est dans `data` selon ton backend
+            // Récupérer le rôle de l'utilisateur depuis la réponse
+            const role = response.data.data; // Le rôle est dans `data` selon ton backend
 
-          // Rediriger selon le rôle
-          if (role === 'ADMINISTRATEUR') {
-            window.location.href = "http://localhost:3000/admin-dashboard";
-          } else {
-            window.location.href = "http://localhost:3000/equipment-page";
+            // Rediriger selon le rôle
+            if (role === 'ADMINISTRATEUR') {
+              window.location.href = "http://localhost:3000/admin-dashboard";
+            } else if (role) {
+              window.location.href = "http://localhost:3000/equipment-page";
+            } else {
+              this.error = "Failed to retrieve user role. Please contact support.";
+            }
+          } catch (error) {
+            console.error("Error fetching role:", error.message);
+            this.error = "Network error. Please try again later.";
           }
-        } else {
-          console.log("Email non vérifié.");
-          // Tu peux rediriger ou afficher un message pour demander la vérification de l'email
         }
       } catch (error) {
-        // Gestion des erreurs
-        console.error("Erreur :", error.message);
-        this.error = "Une erreur s'est produite. Veuillez vérifier vos identifiants.";
+        if (error.code === 'auth/user-not-found') {
+          this.error = "No user found with this email.";
+        } else if (error.code === 'auth/wrong-password') {
+          this.error = "Incorrect password.";
+        } else if (error.code === 'auth/too-many-requests') {
+          this.error = "Too many login attempts. Please try again later.";
+        } else {
+          console.error("Unknown error during login:", error.message);
+          this.error = "An unexpected error occurred. Please try again.";
+        }
       }
     },
   }
@@ -81,7 +92,8 @@ body {
 }
 
 .login-page {
-  max-width: 800px;
+  width: 900px;
+  height: 100%;
   margin: auto;
   padding: 2rem;
   border-radius: 32px;

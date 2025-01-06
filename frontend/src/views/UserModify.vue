@@ -1,78 +1,102 @@
 <template>
-  <div class="user-modify-page">
-    <h2 class="page-title">UserModify</h2>
-    <div class="user-modify">
-      <div class="header">
-        <button @click="cancel" class="cancel-button">Cancel</button>
-        <button @click="logout" class="logout-button">Log Out</button>
+  <div class="user-modify-container">
+    <header class="user-modify-header">
+      <h1 class="title">Modify User</h1>
+      <div class="header-buttons">
+        <button class="back-button" @click="goToPage">Back</button>
+        <button class="logout-button" @click="logout">Log Out</button>
       </div>
+    </header>
 
-      <form @submit.prevent="submitModify">
-        <div class="form-group">
-          <label for="lastname">Lastname</label>
-          <input type="text" id="lastname" v-model="lastname" placeholder="Lastname" required />
+    <div class="user-modify">
+      <div class="form">
+        <div class="form-field">
+          <p>Last Name</p>
+          <input type="text" v-model="user.nomUtilisateur" id="lastname" />
         </div>
-        <div class="form-group">
-          <label for="firstname">Firstname</label>
-          <input type="text" id="firstname" v-model="firstname" placeholder="Firstname" required />
+        <div class="form-field">
+          <p>First Name</p>
+          <input type="text" v-model="user.prenomUtilisateur" id="firstname" />
         </div>
-        <div class="form-group">
-          <label for="id">Id</label>
-          <input type="text" id="id" :value="id" readonly />
+        <div class="form-field">
+          <p>Email</p>
+          <input type="email" v-model="user.emailUtilisateur" id="email" />
         </div>
-        <div class="form-group">
-          <label for="role">Rôle</label>
-          <select id="role" v-model="role">
+        <div class="form-field">
+          <p>Role</p>
+          <select v-model="user.role" id="role">
             <option value="Admin">Admin</option>
             <option value="User">User</option>
           </select>
         </div>
 
-        <button type="submit" class="modify-button">Modify</button>
-      </form>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      </div>
+
+      <div class="save-changes-container">
+        <button class="modify-button" @click="saveChanges">Save Changes</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {signOut} from "firebase/auth";
-import {auth} from "@/firebase";
+import axios from "axios";
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import router from "@/router";
 
 export default {
-  props: ['id'],
   data() {
     return {
-      lastname: "",
-      firstname: "",
-      role: "User",
+      user: {
+        nomUtilisateur: "",
+        prenomUtilisateur: "",
+        emailUtilisateur: "",
+        role: "User",
+      },
+      errorMessage: "",
     };
   },
   methods: {
-    cancel() {
-      this.$router.push(`/user-details/${this.id}`);
+    async loadUser() {
+      try {
+        const response = await axios.get(`http://localhost:3000/user-details/${this.$route.params.id}`);
+        this.user = response.data;
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        this.errorMessage = "Error loading user details.";
+      }
+    },
+    async saveChanges() {
+      try {
+        await axios.put(`/user-modify/${this.$route.params.id}`, this.user);
+        alert("User details updated successfully!");
+        router.push("/user-management");
+      } catch (error) {
+        console.error("Error updating user:", error);
+        this.errorMessage = "Error saving changes.";
+      }
+    },
+    goToPage() {
+      router.push("/user-management");
     },
     async logout() {
-      // Debug pour deconnection (ou pas)
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
+      window.location.href = "http://localhost:3000/user-login";
     },
-    submitModify() {
-      // Logique pour envoyer les modifications via une requête PUT
-      console.log("Form submitted:", this.lastname, this.firstname, this.id, this.role);
-    },
+  },
+  async mounted() {
+    await this.loadUser();
   },
 };
 </script>
 
-<style>
-body {
-  background-color: #e2e2ff;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
-
-.user-modify-page {
-  max-width: 600px;
+<style scoped>
+.user-modify-container {
+  width: 900px;
+  height: 100%;
   margin: auto;
   padding: 2rem;
   border-radius: 32px;
@@ -80,29 +104,20 @@ body {
   box-shadow: -26px 26px 52px #c0b8cf, 26px -26px 52px #fffaff;
 }
 
-.page-title {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #494850;
-}
-
-.user-modify {
-  text-align: center;
-}
-
-.header {
+.user-modify-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-button {
+
+.logout-button,
+.back-button {
   border: none;
   color: #fff;
   background-image: linear-gradient(30deg, #7D5C97, #A693C4);
-  border-radius: 20px;
+  border-radius: 5px;
   font-family: inherit;
   font-size: 17px;
   padding: 0.6em 1.5em;
@@ -110,10 +125,16 @@ button {
   transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-button:hover {
+.logout-button:hover,
+.back-button:hover {
   background-position: right center;
   background-size: 200% auto;
   animation: pulse 1.5s infinite;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
 }
 
 @keyframes pulse {
@@ -128,32 +149,62 @@ button:hover {
   }
 }
 
-form {
-  text-align: left;
-  margin: 1rem 0;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+.title {
+  font-size: 1.8rem;
   color: #494850;
 }
 
-input, select {
+.user-modify {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+input,
+select {
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.2rem;
-  border: 1px solid #978897;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: white;
+}
+
+.save-changes-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .modify-button {
-  background-color: #4CAF50;
+  border: none;
+  color: #fff;
+  background-image: linear-gradient(30deg, #7d5c97, #a693c4);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 17px;
+  padding: 0.6em 1.5em;
+  cursor: pointer;
+  transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
+
+.modify-button:hover {
+  background-position: right center;
+  background-size: 200% auto;
+  animation: pulse 1.5s infinite;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 </style>
