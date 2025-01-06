@@ -16,11 +16,6 @@
         <p><strong>Id:</strong> {{ userId }}</p>
         <p><strong>Role:</strong> {{ user.roleUtilisateur }}</p>
       </div>
-
-      <div class="actions">
-        <button @click="modifyUser" class="modify-button">Modify</button>
-        <button @click="deleteUser" class="delete-button">Delete</button>
-      </div>
     </div>
   </div>
 </template>
@@ -65,12 +60,6 @@ export default {
       alert("Logged out!");
       await signOut(auth);
       window.location.href = "http://localhost:3000/user-login";
-    },
-    modifyUser() {
-      this.$router.push(`/user-modify/${this.userId}`);
-    },
-    deleteUser() {
-      console.log("Delete button clicked");
     },
   },
 };
