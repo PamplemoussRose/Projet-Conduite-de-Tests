@@ -1,9 +1,9 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
+
 module.exports = defineConfig({
-  transpileDependencies: true
-})
-module.exports = {
+  transpileDependencies: true,
   devServer: {
-    //proxy: 'http://localhost:3000', // ou le port de votre backend Node.js
-  },
-};
+    port: 8080, // Spécifiez le port 8080
+    proxy: 'http://localhost:3000', // Proxy pour les requêtes backend si nécessaire
+  }
+});
