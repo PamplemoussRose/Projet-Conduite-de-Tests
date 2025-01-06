@@ -13,7 +13,7 @@ import {
   beforeAll(async () => {
     const rulesPath = path.resolve(__dirname, '../firestore.rules');
     testEnv = await initializeTestEnvironment({
-      projectId: "demo-project-1234",
+      projectId: "locamat-7cf78234",
       firestore: {
         host: "127.0.0.1", 
         port: 8081,
