@@ -24,9 +24,9 @@
         </div>
         <div class="form-field">
           <p>Role</p>
-          <select v-model="user.role" id="role">
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
+          <select v-model="user.roleUtilisateur" id="role">
+            <option value="ADMINISTRATEUR">Admin</option>
+            <option value="EMPRUNTEUR">User</option>
           </select>
         </div>
 
@@ -53,7 +53,7 @@ export default {
         nomUtilisateur: "",
         prenomUtilisateur: "",
         emailUtilisateur: "",
-        role: "User",
+        roleUtilisateur: "User",
       },
       errorMessage: "",
     };
@@ -70,12 +70,35 @@ export default {
     },
     async saveChanges() {
       try {
-        await axios.put(`/user-modify/${this.$route.params.id}`, this.user);
-        alert("User details updated successfully!");
-        router.push("/user-management");
+          if (!this.user.nomUtilisateur || this.user.nomUtilisateur.trim().length === 0) {
+              this.errorMessage = "First name is required.";
+              return;
+          }
+
+          if (!this.user.prenomUtilisateur || this.user.prenomUtilisateur.trim().length === 0) {
+              this.errorMessage = "Last name is required.";
+              return;
+          }
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          
+          if (!this.user.emailUtilisateur || !emailRegex.test(this.user.emailUtilisateur)) {
+              this.errorMessage = "Invalid email address.";
+              return;
+          }
+
+          const userPayload = {
+              nomUtilisateur: this.user.nomUtilisateur.trim(),
+              prenomUtilisateur: this.user.prenomUtilisateur.trim(),
+              emailUtilisateur: this.user.emailUtilisateur.trim(),
+              roleUtilisateur: this.user.roleUtilisateur,
+          };
+
+          await axios.put(`http://localhost:3000/user-modify/${this.$route.params.id}`, userPayload);
+          alert("User details updated successfully!");
+          this.$router.push("/user-management");
       } catch (error) {
-        console.error("Error updating user:", error);
-        this.errorMessage = "Error saving changes.";
+          console.error("Error updating user:", error);
+          this.errorMessage = error.response?.data?.message || "Error saving changes. Please try again.";
       }
     },
     goToPage() {
@@ -84,7 +107,7 @@ export default {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = "http://localhost:3000/user-login";
+      router.push("/");
     },
   },
   async mounted() {

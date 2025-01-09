@@ -9,30 +9,27 @@
     </header>
 
     <div class="tabs">
-      <button
-        :class="{ active: activeTab === 'manage' }"
-        @click="activeTab = 'manage'"
-      >
-        Manage Users
-      </button>
-      <button
-        :class="{ active: activeTab === 'add' }"
-        @click="activeTab = 'add'"
-      >
-        Add User
-      </button>
+      <button :class="{ active: activeTab === 'manage' }" @click="activeTab = 'manage'"> Manage Users </button>
+      <button :class="{ active: activeTab === 'add' }" @click="activeTab = 'add'"> Add User </button>
     </div>
 
     <div v-if="activeTab === 'manage'" class="manage-users-tab">
       <div class="table-controls">
+        <span>Search by :</span>
+        <select v-model="searchCriteria" class="search-criteria-dropdown">
+          <option value="firstName">First Name</option>
+          <option value="lastName">Last Name</option>
+          <option value="email">Email</option>
+        </select>
         <input type="text" v-model="searchQuery" placeholder="Search users..." class="search-bar"/>
       </div>
       <div class="table-content">
         <table>
           <thead>
             <tr>
-              <th>Last Name</th>
               <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
               <th v-if="loginRole === 'ADMINISTRATEUR'">Modify</th>
               <th v-if="loginRole === 'ADMINISTRATEUR'">Delete</th>
             </tr>
@@ -42,18 +39,15 @@
               <td colspan="4">No users found</td>
             </tr>
             <tr
-              v-for="(user, index) in filteredUsers"
-              :key="index"
-              @click="goToUserDetails(user.idUtilisateur)"
-              class="clickable-row"
-            >
-              <td>{{ user.nomUtilisateur }}</td>
+              v-for="(user, index) in filteredUsers" :key="index" @click="goToUserDetails(user.idUtilisateur)" class="clickable-row">
               <td>{{ user.prenomUtilisateur }}</td>
+              <td>{{ user.nomUtilisateur }}</td>
+              <td>{{ user.emailUtilisateur }}</td>
               <td v-if="loginRole === 'ADMINISTRATEUR'">
-                <button class="add-button" @click.stop="modifyUser(user.idUtilisateur)">Modify</button>
+                <button class="action-button" @click.stop="modifyUser(user.idUtilisateur)">Modify</button>
               </td>
               <td v-if="loginRole === 'ADMINISTRATEUR'">
-                <button class="add-button" @click.stop="deleteUser(user.idUtilisateur)">Delete</button>
+                <button class="action-button" @click.stop="deleteUser(user.idUtilisateur)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -80,6 +74,9 @@
           <input type="email" v-model="newUser.email" placeholder="E-mail" />
         </div>
         <div class="form-field">
+          <input type="text" v-model="newUser.matriculeUtilisateur" placeholder="Matricule (7 characters)" maxlength="7"/>
+        </div>
+        <div class="form-field">
           <label for="role">Role</label>
           <select v-model="newUser.roleUtilisateur" id="role">
             <option value="ADMINISTRATEUR">Admin</option>
@@ -87,7 +84,7 @@
           </select>
         </div>
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        <button @click="addUser" class="add-button">Add User</button>
+        <button @click="addUser" class="action-button">Add User</button>
       </div>
     </div>
   </div>
@@ -113,31 +110,55 @@ export default {
       users: [],
       searchQuery: "",
       loginRole: "",
+      searchCriteria: "firstName",
     };
   },
   computed: {
     filteredUsers() {
-      if (!this.searchQuery) return this.users;
-
+      let filtered = this.users;
       const query = this.searchQuery.toLowerCase();
-      return this.users.filter(
-        (user) =>
-          user.nomUtilisateur.toLowerCase().includes(query) ||
-          user.prenomUtilisateur.toLowerCase().includes(query)
-      );
+
+      if (this.searchQuery) {
+        switch (this.searchCriteria) {
+          case "email":
+            filtered = filtered.filter((user) =>
+              user.emailUtilisateur.toLowerCase().includes(query)
+            );
+            break;
+          case "firstName":
+            filtered = filtered.filter((user) =>
+              user.prenomUtilisateur.toLowerCase().includes(query)
+            );
+            break;
+          case "lastName":
+            filtered = filtered.filter((user) =>
+              user.nomUtilisateur.toLowerCase().includes(query)
+            );
+            break;
+          default:
+            break;
+        }
+      }
+      return filtered;
     },
   },
   methods: {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
+      router.push("/");
     },
     goToPage() {
       router.push("/admin-dashboard");
     },
     async addUser() {
       try {
+        // Validation du matricule
+        if (!this.newUser.matriculeUtilisateur || this.newUser.matriculeUtilisateur.length !== 7) {
+          this.errorMessage = "Matricule must be exactly 7 characters.";
+          return;
+        }
+
         const response = await axios.post("http://localhost:3000/user-management", this.newUser);
 
         this.newUser = {
@@ -145,6 +166,7 @@ export default {
           prenomUtilisateur: "",
           email: "",
           roleUtilisateur: "",
+          matriculeUtilisateur: "",
         };
 
         alert(response.data.message);
@@ -334,7 +356,7 @@ select {
 }
 
 
-.add-button {
+.action-button {
   border: none;
   color: #fff;
   background-image: linear-gradient(30deg, #7d5c97, #a693c4);
@@ -347,7 +369,7 @@ select {
   transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-.add-button:hover {
+.action-button:hover {
   background-position: right center;
   background-size: 200% auto;
   animation: pulse 1.5s infinite;
@@ -371,9 +393,6 @@ select {
   margin-bottom: 1rem;
 }
 
-.table-controls {
-  margin-bottom: 1rem;
-}
 
 button {
   border: none;
@@ -404,11 +423,39 @@ button:hover {
     box-shadow: 0 0 0 0 rgba(125, 92, 151, 0);
   }
 }
+.table-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+  white-space: nowrap;
+}
+
+.search-dropdown {
+  margin-right: 1rem;
+}
+
+.search-criteria-dropdown {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 140px;
+  color: #494850;
+  background-color: #f9f9ff;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-criteria-dropdown:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(125, 92, 151, 0.5);
+}
 .search-bar {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
+  width: 400px;
   max-width: 400px;
   background-color: #f9f9ff;
   font-size: 1rem;
@@ -423,6 +470,7 @@ button:hover {
 
 .table-content {
   border: 1px solid #ccc;
+  border-radius: 10px;
   background-color: #fff;
   overflow-y: auto;
   max-height: 400px;
@@ -431,7 +479,7 @@ button:hover {
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 th,
@@ -440,6 +488,13 @@ td {
   text-align: left;
   border-bottom: 1px solid #ddd;
   word-wrap: break-word;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #e8e8ff;
+  z-index: 1;
 }
 
 th {

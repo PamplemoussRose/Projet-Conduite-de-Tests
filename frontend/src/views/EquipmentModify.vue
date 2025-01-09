@@ -53,6 +53,8 @@
 <script>
 import router from '@/router';
 import axios from 'axios';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase';
 
 export default {
   data() {
@@ -92,33 +94,70 @@ export default {
       reader.readAsDataURL(file);
     },
     async modifyButton() {
-      const formData = new FormData();
-      formData.append('nomMateriel', this.equipment.nomMateriel);
-      formData.append('versionMateriel', this.equipment.versionMateriel);
-      formData.append('referenceMateriel', this.equipment.referenceMateriel);
-      formData.append('etatMateriel', this.equipment.etatMateriel);
-      formData.append('numeroTelephoneMateriel', this.equipment.numeroTelephoneMateriel);
-      if (this.photoMaterielFile) {
-        formData.append('photoMateriel', this.photoMaterielFile);
-      } else {
-        formData.append('photoMateriel', this.equipment.photoMateriel);
-      }
+        // Validation des champs
+        if (!this.equipment.nomMateriel || this.equipment.nomMateriel.trim().length < 1) {
+            this.errorMessage = "Material name must not be empty.";
+            return;
+        }
 
-      try {
-        const response = await axios.put(`http://localhost:3000/equipment-modify/${this.$route.params.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log('Equipment modified successfully:', response.data);
-        this.goToPage();
-      } catch (error) {
-        console.error('Error modifying equipment:', error);
-        this.errorMessage = error.message;
-      }
+        if (!this.equipment.versionMateriel || this.equipment.versionMateriel.trim().length < 3) {
+            this.errorMessage = "Material version must be at least 3 characters long.";
+            return;
+        }
+
+        if (!this.equipment.referenceMateriel || this.equipment.referenceMateriel.trim().length !== 5) {
+            this.errorMessage = "Reference must be exactly 5 characters.";
+            return;
+        }
+
+        if (!['DISPONIBLE', 'EMPRUNTER'].includes(this.equipment.etatMateriel)) {
+            this.errorMessage = "Status must be either 'DISPONIBLE' or 'EMPRUNTER'.";
+            return;
+        }
+
+        if (
+            this.equipment.numeroTelephoneMateriel &&
+            !/^\d{10}$/.test(this.equipment.numeroTelephoneMateriel)
+        ) {
+            this.errorMessage = "Phone number must be exactly 10 digits.";
+            return;
+        }
+
+        // Si aucune erreur, envoyer les données
+        const formData = new FormData();
+        formData.append('nomMateriel', this.equipment.nomMateriel);
+        formData.append('versionMateriel', this.equipment.versionMateriel);
+        formData.append('referenceMateriel', this.equipment.referenceMateriel);
+        formData.append('etatMateriel', this.equipment.etatMateriel);
+        formData.append('numeroTelephoneMateriel', this.equipment.numeroTelephoneMateriel || ""); // Envoyer une chaîne vide si non fourni
+
+        if (this.photoMaterielFile) {
+            formData.append('photoMateriel', this.photoMaterielFile);
+        } else {
+            formData.append('photoMateriel', this.equipment.photoMateriel);
+        }
+
+        try {
+            const response = await axios.put(
+                `http://localhost:3000/equipment-modify/${this.$route.params.id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            console.log('Equipment modified successfully:', response.data);
+            this.goToPage();
+        } catch (error) {
+            console.error('Error modifying equipment:', error);
+            this.errorMessage = error.response?.data?.message || error.message;
+        }
     },
-    logout() {
+    async logout() {
       alert("Logged out!");
+      await signOut(auth);
+      router.push("/");
     },
   },
 };

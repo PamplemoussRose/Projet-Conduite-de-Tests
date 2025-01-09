@@ -10,7 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import UserModify from "@/views/UserModify.vue";
 const routes = [
   {
-    path: '/',
+    path: '/user-login',
     name: 'UserLogin',
     component: UserLogin
   },
@@ -25,7 +25,7 @@ const routes = [
     component: UserManagement,
   },
   {
-    path: '/equipment-page',
+    path: '/',
     name: 'EquipmentPage',
     component: EquipmentPage,
   },
@@ -36,8 +36,6 @@ const routes = [
     component: EquipmentModify,
     props: true,
   },
-
-
 
   {
     path: '/user-details/:id',

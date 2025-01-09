@@ -8,13 +8,34 @@
     <nav class="dashboard-nav">
       <ul>
         <li>
-          <button @click="navigateTo('/user-management')" class="nav-button">User Management</button>
+          <button @click="navigateTo('/user-management')" class="nav-button">Users Management</button>
         </li>
         <li>
-          <button @click="navigateTo('/equipment-page')" class="nav-button">Equipment Management</button>
+          <button @click="navigateTo('/')" class="nav-button">Equipments Management</button>
         </li>
       </ul>
     </nav>
+    <div class="statistics-panel">
+      <h2>Dashboard Statistics</h2>
+      <div class="stats-container">
+        <div class="stat-item">
+          <h3>Total Users</h3>
+          <p>{{ statistics.totalUsers }}</p>
+        </div>
+        <div class="stat-item">
+          <h3>Total Equipment</h3>
+          <p>{{ statistics.totalEquipment }}</p>
+        </div>
+        <div class="stat-item">
+          <h3>Reserved Equipment</h3>
+          <p>{{ statistics.reservedEquipment }}</p>
+        </div>
+        <div class="stat-item">
+          <h3>Available Equipment</h3>
+          <p>{{ statistics.availableEquipment }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -28,12 +49,33 @@ export default {
   data() {
     return {
       loginRole: '',
+      statistics: {
+        totalUsers: 0,
+        totalEquipment: 0,
+        reservedEquipment: 0,
+        availableEquipment: 0,
+      },
     };
   },
   methods: {
+    async fetchStatistics() {
+      try {
+        const usersResponse = await axios.get("http://localhost:3000/user-management/data");
+        this.statistics.totalUsers = usersResponse.data.data.length;
+
+        const equipmentResponse = await axios.get("http://localhost:3000/equipment-page/data");
+        const equipment = equipmentResponse.data.data;
+        this.statistics.totalEquipment = equipment.length;
+        this.statistics.reservedEquipment = equipment.filter(item => item.etatMateriel === "EMPRUNTER").length;
+        this.statistics.availableEquipment = equipment.filter(item => item.etatMateriel === "DISPONIBLE").length;
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    },
     async logout() {
+      alert("Logged out!");
       await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
+      router.push("/");
     },
     navigateTo(route) {
       router.push(route);
@@ -41,7 +83,7 @@ export default {
   },
   async mounted() {
     if (auth.currentUser == null) {
-      window.location.href = 'http://localhost:3000/';
+      router.push("/");
     }
     const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`, {
       withCredentials: true,
@@ -50,8 +92,9 @@ export default {
     // Récupérer le rôle de l'utilisateur depuis la réponse
     this.loginRole = response.data.data; 
     if (this.loginRole !== "ADMINISTRATEUR") {
-        window.location.href = 'http://localhost:8080/equipment-page';
+        window.location.href = 'http://localhost:8080/';
     }
+    await this.fetchStatistics();
   }
 };
 </script>
@@ -164,6 +207,25 @@ export default {
   100% {
     box-shadow: 0 0 0 0 rgba(177, 143, 207, 0);
   }
+}
+
+.statistics-panel {
+  margin-bottom: 2rem;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1rem;
 }
 
 </style>

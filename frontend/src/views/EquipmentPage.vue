@@ -1,23 +1,35 @@
 <template>
   <div class="equipment-management-container">
     <header class="equipment-management-header">
-      <h1 class="title">{{ loginRole === 'ADMINISTRATEUR' ? 'Equipment Management' : 'Equipment List' }}</h1>
+      <h1 class="title">{{ isLoggedIn && loginRole === 'ADMINISTRATEUR' ? 'Equipment Management' : 'Equipment List' }}</h1>
       <div class="header-buttons">
-        <button v-if="loginRole === 'ADMINISTRATEUR'" class="back-button" @click="goToPage">Back</button>
-        <button class="logout-button" @click="logout">Log Out</button>
+        <button v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'" class="back-button" @click="goToPage">Back</button>
+        <button v-if="!isLoggedIn" class="logout-button" @click="goToLogin">Log In</button>
+        <button v-else class="logout-button" @click="logout">Log Out</button>
       </div>
     </header>
 
-    <!-- Navigation (ADMIN) -->
-    <div v-if="loginRole === 'ADMINISTRATEUR'" class="tabs">
+    <!-- Tabs for Admin -->
+    <div v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'" class="tabs">
       <button :class="{ active: activeTab === 'manage' }" @click="activeTab = 'manage'">Manage Equipment</button>
       <button :class="{ active: activeTab === 'add' }" @click="activeTab = 'add'">Add Equipment</button>
     </div>
 
-    <!-- Section d'equipements -->
-    <div v-if="activeTab === 'manage' || loginRole !== 'ADMINISTRATEUR'" class="manage-equipment-tab">
+    <!-- Manage Equipment -->
+    <div v-if="activeTab === 'manage' || !isLoggedIn || loginRole !== 'ADMINISTRATEUR'" class="manage-equipment-tab">
       <div class="table-controls">
+        <span>Search by : </span>
+        <div class="search-dropdown">
+          <select v-model="searchCriteria" class="search-criteria-dropdown">
+            <option value="name">Name</option>
+            <option value="reference">Reference</option>
+          </select>
+        </div>
         <input type="text" v-model="searchQuery" placeholder="Search equipment..." class="search-bar" />
+        <label class="filter-label">
+          <input type="checkbox" v-model="showAvailableOnly" class="filter-checkbox" />
+        </label>
+        <span>Show available only</span>
       </div>
       <div class="table-content">
         <table>
@@ -25,8 +37,9 @@
             <tr>
               <th>Image</th>
               <th>Equipment Name</th>
-              <th v-if="loginRole === 'ADMINISTRATEUR'">Modify</th>
-              <th v-if="loginRole === 'ADMINISTRATEUR'">Delete</th>
+              <th>Reference</th>
+              <th v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'">Modify</th>
+              <th v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -38,10 +51,11 @@
                 <img :src="equipment.photoMateriel" alt="Equipment Image" class="equipment-image" />
               </td>
               <td>{{ equipment.nomMateriel }}</td>
-              <td v-if="loginRole === 'ADMINISTRATEUR'">
+              <td>{{ equipment.referenceMateriel }}</td>
+              <td v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'">
                 <button class="add-button" @click.stop="Actionmodify(equipment.IdMateriel)">Modify</button>
               </td>
-              <td v-if="loginRole === 'ADMINISTRATEUR'">
+              <td v-if="isLoggedIn && loginRole === 'ADMINISTRATEUR'">
                 <button class="add-button" @click.stop="Actiondelete(equipment.IdMateriel)">Delete</button>
               </td>
             </tr>
@@ -49,25 +63,25 @@
         </table>
       </div>
     </div>
-
-    <!-- Section d'ajout d'equipements -->
-    <div v-if="activeTab === 'add' && loginRole === 'ADMINISTRATEUR'" class="add-equipment-tab">
+    <div v-if="activeTab === 'add' && isLoggedIn && loginRole === 'ADMINISTRATEUR'" class="add-equipment-tab">
       <div class="equipment-form">
-        <h3 class="section-title">Equipment Details</h3>
-        <div class="form-field">
-          <input type="text" v-model="newEquipment.nomMateriel" placeholder="Equipment Name" />
-          <input type="text" v-model="newEquipment.versionMateriel" placeholder="Version" />
+        <div class="equipment-form">
+          <h3 class="section-title">Equipment Details</h3>
+          <div class="form-field">
+            <input type="text" v-model="newEquipment.nomMateriel" placeholder="Equipment Name" />
+            <input type="text" v-model="newEquipment.versionMateriel" placeholder="Version" />
+          </div>
+          <div class="form-field">
+            <input type="text" v-model="newEquipment.referenceMateriel" placeholder="Reference (5 characters)" />
+            <input type="text" v-model="newEquipment.numeroTelephoneMateriel" placeholder="Phone Number" />
+          </div>
+          <div class="form-field">
+            <label for="photoMateriel">Photo</label>
+            <input type="file" id="photoMateriel" @change="handleFileUpload" accept="image/*" />
+          </div>
+          <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+          <button @click="addEquipment" class="add-button">Add Equipment</button>
         </div>
-        <div class="form-field">
-          <input type="text" v-model="newEquipment.referenceMateriel" placeholder="Reference (5 characters)" />
-          <input type="text" v-model="newEquipment.numeroTelephoneMateriel" placeholder="Phone Number" />
-        </div>
-        <div class="form-field">
-          <label for="photoMateriel">Photo</label>
-          <input type="file" id="photoMateriel" @change="handleFileUpload" accept="image/*" />
-        </div>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        <button @click="addEquipment" class="add-button">Add Equipment</button>
       </div>
     </div>
   </div>
@@ -82,10 +96,13 @@ import router from "@/router";
 export default {
   data() {
     return {
+      isLoggedIn: false,
       activeTab: "manage",
       searchQuery: "",
+      searchCriteria: "name",
       loginRole: "",
       equipment: [],
+      showAvailableOnly: false,
       newEquipment: {
         nomMateriel: "",
         versionMateriel: "",
@@ -99,56 +116,74 @@ export default {
   },
   computed: {
     filteredEquipment() {
-      if (!this.searchQuery) return this.equipment;
-      const query = this.searchQuery.toLowerCase();
-      return this.equipment.filter((item) => item.nomMateriel.toLowerCase().includes(query));
+      let filtered = this.equipment;
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        if (this.searchCriteria === "name") {
+          filtered = filtered.filter((item) =>
+            item.nomMateriel.toLowerCase().includes(query)
+          );
+        } else if (this.searchCriteria === "reference") {
+          filtered = filtered.filter((item) =>
+            item.referenceMateriel.toLowerCase().includes(query)
+          );
+        }
+      }
+      if (this.showAvailableOnly) {
+        filtered = filtered.filter((item) => item.etatMateriel === "DISPONIBLE");
+      }
+      return filtered;
     },
   },
   methods: {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = "http://localhost:3000/user-login";
+      router.push("/");
     },
     goToPage() {
       router.push("/admin-dashboard");
     },
     goToEquipmentDetail(equipmentId) {
+      if (!this.isLoggedIn) {
+        router.push("/user-login");
+        return;
+      }
       window.location.href = `http://localhost:3000/equipment-detail/${equipmentId}`;
     },
     async addEquipment() {
-      try {
-        if (!this.newEquipment.nomMateriel || !this.newEquipment.versionMateriel || !this.newEquipment.referenceMateriel || !this.newEquipment.numeroTelephoneMateriel) {
-          this.errorMessage = "All fields are required!";
-          return;
-        }
-        if (this.newEquipment.referenceMateriel.length !== 5) {
-          this.errorMessage = "Reference must be 5 characters.";
-          return;
-        }
-        if (!/^\d{10}$/.test(this.newEquipment.numeroTelephoneMateriel)) {
-          this.errorMessage = "Phone number must be 10 digits.";
-          return;
-        }
+        try {
+            if (!this.newEquipment.nomMateriel || !this.newEquipment.versionMateriel || !this.newEquipment.referenceMateriel) {
+                this.errorMessage = "All fields are required except phone number.";
+                return;
+            }
+            if (this.newEquipment.referenceMateriel.length !== 5) {
+                this.errorMessage = "Reference must be 5 characters.";
+                return;
+            }
+            if (this.newEquipment.numeroTelephoneMateriel && !/^\d{10}$/.test(this.newEquipment.numeroTelephoneMateriel)) {
+                this.errorMessage = "Phone number must be 10 digits.";
+                return;
+            }
 
-        const formData = new FormData();
-        formData.append("nomMateriel", this.newEquipment.nomMateriel);
-        formData.append("versionMateriel", this.newEquipment.versionMateriel);
-        formData.append("referenceMateriel", this.newEquipment.referenceMateriel);
-        formData.append("numeroTelephoneMateriel", this.newEquipment.numeroTelephoneMateriel);
-        formData.append("etatMateriel", this.newEquipment.etatMateriel);
-        if (this.photoFile) {
-          formData.append("photoMateriel", this.photoFile);
-        }
+            const formData = new FormData();
+            formData.append("nomMateriel", this.newEquipment.nomMateriel);
+            formData.append("versionMateriel", this.newEquipment.versionMateriel);
+            formData.append("referenceMateriel", this.newEquipment.referenceMateriel);
+            formData.append("numeroTelephoneMateriel", this.newEquipment.numeroTelephoneMateriel || ""); // Envoyer une chaîne vide si non fourni
+            formData.append("etatMateriel", this.newEquipment.etatMateriel);
+            if (this.photoFile) {
+                formData.append("photoMateriel", this.photoFile);
+            }
 
-        const response = await axios.post("http://localhost:3000/equipment-add", formData);
-        alert(response.data.message);
-        this.resetForm();
-        this.getEquipmentData();
-        this.activeTab = "manage";
-      } catch (error) {
-        this.errorMessage = error.response?.data?.message || "Error adding equipment.";
-      }
+            const response = await axios.post("http://localhost:3000/equipment-add", formData);
+            alert(response.data.message);
+            this.resetForm();
+            this.getEquipmentData();
+            this.activeTab = "manage";
+        } catch (error) {
+            this.errorMessage = error.response?.data?.message || "Error adding equipment.";
+        }
     },
     resetForm() {
       this.newEquipment = {
@@ -187,16 +222,20 @@ export default {
           console.error("Error fetching equipment:", error);
         });
     },
+    goToLogin() {
+      router.push("/user-login");
+    },
   },
   async mounted() {
-    if (!auth.currentUser) {
-      window.location.href = "http://localhost:3000/";
-      return;
-    }
-    const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`);
-    this.loginRole = response.data.data;
-    if (this.loginRole !== "ADMINISTRATEUR") {
-      this.activeTab = "manage";
+    this.isLoggedIn = !!auth.currentUser;
+
+    if (this.isLoggedIn) {
+      const response = await axios.get(`http://localhost:3000/get-role?email=${auth.currentUser.email}`);
+      this.loginRole = response.data.data;
+
+      if (this.loginRole !== "ADMINISTRATEUR") {
+        this.activeTab = "manage";
+      }
     }
     this.getEquipmentData();
   },
@@ -301,15 +340,75 @@ export default {
   transform: scale(0.9);
 }
 
-.manage-equipment-tab .table-controls {
+.manage-equipment-tab {
   margin-bottom: 1rem;
 }
+
+.table-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.search-dropdown {
+  margin-right: 1rem;
+}
+
+.search-criteria-dropdown {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #494850;
+  background-color: #f9f9ff;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-criteria-dropdown:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(125, 92, 151, 0.5);
+}
+
+
+.filter-label {
+  font-size: 1rem;
+  color: #494850;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #7D5C97;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.filter-checkbox:checked {
+  background-color: #7D5C97;
+  border-color: #7D5C97;
+}
+
+.filter-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 3px rgba(125, 92, 151, 0.8);
+}
+
 
 .search-bar {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
+  width: 400px;
   max-width: 400px;
   background-color: #f9f9ff;
   font-size: 1rem;
@@ -322,8 +421,10 @@ export default {
   box-shadow: 0 0 8px rgba(125, 92, 151, 0.5);
 }
 
+
 .table-content {
   border: 1px solid #ccc;
+  border-radius: 10px;
   background-color: #fff;
   overflow-y: auto;
   max-height: 400px;
@@ -332,7 +433,14 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto; 
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #e8e8ff;
+  z-index: 1;
 }
 
 th,
@@ -359,6 +467,7 @@ tr:hover {
 .equipment-image {
   width: 80px;
   height: 80px;
+  object-fit: contain;
 }
 
 .add-equipment-tab .equipment-form {

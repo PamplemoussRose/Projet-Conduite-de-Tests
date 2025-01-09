@@ -23,6 +23,7 @@
 <script>
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
+import router from "@/router";
 
 export default {
   props: ["id"],
@@ -59,7 +60,7 @@ export default {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = "http://localhost:3000/user-login";
+      router.push("/");
     },
   },
 };
@@ -88,16 +89,12 @@ export default {
   color: #494850;
 }
 
-.header-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-button {
+.logout-button,
+.back-button {
   border: none;
   color: #fff;
   background-image: linear-gradient(30deg, #7D5C97, #A693C4);
-  border-radius: 20px;
+  border-radius: 5px;
   font-family: inherit;
   font-size: 17px;
   padding: 0.6em 1.5em;
@@ -105,10 +102,16 @@ button {
   transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-button:hover {
+.logout-button:hover,
+.back-button:hover {
   background-position: right center;
   background-size: 200% auto;
   animation: pulse 1.5s infinite;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
 }
 
 @keyframes pulse {
@@ -140,29 +143,33 @@ button:hover {
   justify-content: space-around;
 }
 
-.logout-button {
-  background-color: #b18fcf;
-  color: white;
-  padding: 0.5rem 1rem;
+button {
   border: none;
-  border-radius: 5px;
+  color: #fff;
+  background-image: linear-gradient(30deg, #7D5C97, #A693C4);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 17px;
+  padding: 0.6em 1.5em;
   cursor: pointer;
+  transition: background-size 0.3s ease, box-shadow 0.3s ease;
 }
 
-.logout-button:hover {
-  background-color: #978897;
+button:hover {
+  background-position: right center;
+  background-size: 200% auto;
+  animation: pulse 1.5s infinite;
 }
 
-.back-button {
-  background-color: #b18fcf;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.back-button:hover {
-  background-color: #978897;
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(125, 92, 151, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(125, 92, 151, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(125, 92, 151, 0);
+  }
 }
 </style>

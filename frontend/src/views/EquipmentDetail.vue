@@ -7,7 +7,6 @@
         <button @click="logout" class="logout-button">Log Out</button>
       </div>
     </header>
-
     <div class="equipment-content">
       <div class="equipment-image-container">
         <img :src="equipmentData.photoMateriel" alt="Equipment Image" class="equipment-image" />
@@ -17,15 +16,15 @@
         <div class="equipment-info">
           <p><strong>Version:</strong> {{ equipmentData.versionMateriel }}</p>
           <p><strong>Reference:</strong> {{ equipmentData.referenceMateriel }}</p>
-          <p><strong>Phone Number:</strong> {{ equipmentData.numeroTelephoneMateriel }}</p>
+          <p><strong>Phone Number:</strong> {{ equipmentData.numeroTelephoneMateriel || 'Non applicable' }}</p>
         </div>
-
-        <div class="date-selection">
-          <label for="borrow-date">Select Date:</label>
-          <input type="date" id="borrow-date" v-model="selectedDate" />
+        <div>
+          <p v-if="equipmentData.reservedBy && equipmentData.reservedBy !== currentUserId">This equipment is currently reserved by another user.</p>
+          <p v-if="equipmentData.reservedBy === currentUserId">You are currently reserving this equipment.</p>
+          <button class="action-button" v-if="equipmentData.etatMateriel === 'DISPONIBLE'" @click="reserveEquipment">Reserve</button>
+          <button class="action-button" v-else-if="equipmentData.reservedBy === currentUserId" @click="reserveEquipment">Return Equipment</button>
+          <button class="action-button" v-if="equipmentData.reservedBy && equipmentData.reservedBy !== currentUserId && loginRole === 'ADMINISTRATEUR'" @click="makeEquipmentAvailable">Make Available</button>
         </div>
-
-        <button class="borrow-button" @click="post">Borrow</button>
       </div>
     </div>
   </div>
@@ -40,18 +39,18 @@ import router from "@/router";
 export default {
   data() {
     return {
-      loginRole: "",
-      selectedDate: "",
+      currentUserId: null,
       equipmentData: {
         nomMateriel: "",
         photoMateriel: "",
         versionMateriel: "",
         referenceMateriel: "",
         numeroTelephoneMateriel: "",
+        etatMateriel: "DISPONIBLE",
+        reservedBy: null,
       },
     };
   },
-
   async mounted() {
     if (auth.currentUser == null) {
       window.location.href = "http://localhost:3000/";
@@ -69,28 +68,60 @@ export default {
 
     const getdata = await axios.get(`http://localhost:3000/equipment-detail/data/${this.$route.params.id}`);
     this.equipmentData = getdata.data.data;
+    this.currentUserId = auth.currentUser.uid;
+
   },
 
   methods: {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      window.location.href = `http://localhost:3000/user-login`;
+      router.push("/");
     },
     goToPage() {
       router.push("/equipment-page");
     },
-    post() {
-      axios
-        .post("http://localhost:3000/equipment-page", {
-          selectedDate: this.selectedDate,
-        })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+    async reserveEquipment() {
+      const action = this.equipmentData.reservedBy === this.currentUserId ? "return" : "reserve";
+      const confirmed = confirm(`Do you want to ${action} this equipment?`);
+
+      if (!confirmed) return;
+
+      try {
+        const endpoint =
+          this.equipmentData.reservedBy === this.currentUserId
+            ? `http://localhost:3000/equipment-return/${this.$route.params.id}`
+            : `http://localhost:3000/equipment-reserve/${this.$route.params.id}`;
+
+        const response = await axios.post(endpoint, {
+          userId: this.currentUserId,
         });
+
+        this.equipmentData = response.data.updatedEquipment; // Met à jour les données locales
+        const successMessage = action === "return" 
+          ? "The equipment has been successfully returned." 
+          : "The equipment has been successfully reserved.";
+
+        alert(successMessage);
+      } catch (error) {
+        console.error(`Erreur lors de l'action ${action}:`, error);
+        alert(`An error occurred: ${error.response?.data?.message || error.message}`);
+      }
+    },
+    async makeEquipmentAvailable() {
+      const confirmed = confirm('Are you sure you want to make this equipment available? This will remove any existing reservation.');
+
+      if (!confirmed) return;
+
+      try {
+        const response = await axios.post(`http://localhost:3000/equipment-force-available/${this.$route.params.id}`);
+
+        this.equipmentData = response.data.updatedEquipment;
+        alert('The equipment has been made available successfully.');
+      } catch (error) {
+        console.error('Error making equipment available:', error);
+        alert(`An error occurred: ${error.response?.data?.message || error.message}`);
+      }
     },
   },
 };
@@ -246,6 +277,25 @@ button:hover {
   100% {
     box-shadow: 0 0 0 0 rgba(125, 92, 151, 0);
   }
+}
+
+.action-button {
+  background-color: #7d5c97;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.action-button:hover:not(:disabled) {
+  background-color: #a693c4;
 }
 
 </style>
