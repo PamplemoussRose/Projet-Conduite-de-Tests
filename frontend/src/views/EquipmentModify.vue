@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     goToPage() {
-      router.push('/equipment-page');
+      router.push('/');
     },
     handleImageUpload(event) {
       const file = event.target.files[0];

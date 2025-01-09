@@ -79,7 +79,7 @@ export default {
       router.push("/");
     },
     goToPage() {
-      router.push("/equipment-page");
+      router.push("/");
     },
     async reserveEquipment() {
       const action = this.equipmentData.reservedBy === this.currentUserId ? "return" : "reserve";
