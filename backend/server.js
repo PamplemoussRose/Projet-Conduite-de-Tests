@@ -6,7 +6,7 @@ const cors = require('cors');
 const mariadb = require('./mariadb.js');
 const fs = require('fs');
 const admin = require("firebase-admin");
-require('dotenv').config();
+require('dotenv').config(); 
 
 
 const corsOptions = {
