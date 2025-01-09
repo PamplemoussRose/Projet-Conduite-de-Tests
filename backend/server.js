@@ -6,6 +6,8 @@ const cors = require('cors');
 const mariadb = require('./mariadb.js');
 const fs = require('fs');
 const admin = require("firebase-admin");
+require('dotenv').config();
+
 
 const corsOptions = {
     origin: 'http://localhost:8080',
@@ -321,7 +323,7 @@ const sendgrid = require('@sendgrid/mail');
 const crypto = require('crypto');
 
 // Clé API SendGrid
-sendgrid.setApiKey('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');
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY); 
 
 // ########################### POST ###########################
 app.post('/user-management', async (req, res) => {
@@ -341,10 +343,10 @@ app.post('/user-management', async (req, res) => {
     
         const generatedPassword = crypto.randomBytes(4).toString('hex');
   
-        // Add user to Firebase
+        //Firebase
         const firebaseUid = await addUserToFirebase({ emailUtilisateur: email, nomUtilisateur, prenomUtilisateur }, generatedPassword);
 
-        // Add user to MariaDB
+        //MariaDB
         await addUserToMariaDB({ nomUtilisateur, prenomUtilisateur, emailUtilisateur: email, matriculeUtilisateur, roleUtilisateur });
   
       const message = {
