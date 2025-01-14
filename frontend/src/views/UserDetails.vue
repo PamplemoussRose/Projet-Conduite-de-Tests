@@ -23,7 +23,6 @@
 <script>
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
-import router from "@/router";
 
 export default {
   props: ["id"],
@@ -60,7 +59,7 @@ export default {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      router.push("/");
+      window.location.href = "http://localhost:8080";
     },
   },
 };

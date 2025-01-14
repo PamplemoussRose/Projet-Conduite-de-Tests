@@ -59,7 +59,7 @@ export default {
             if (role === 'ADMINISTRATEUR') {
               window.location.href = "http://localhost:3000/admin-dashboard";
             } else if (role) {
-              window.location.href = "http://localhost:3000/equipment-page";
+              window.location.href = "http://localhost:3000/";
             } else {
               this.error = "Failed to retrieve user role. Please contact support.";
             }

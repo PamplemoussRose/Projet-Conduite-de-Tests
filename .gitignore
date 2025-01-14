@@ -68,4 +68,5 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 
-backend/config/*.json
+# Ignore Firebase service account key
+backend/config/locamat-5d1e7-firebase-adminsdk-i2s1t-71b338b2e3.json

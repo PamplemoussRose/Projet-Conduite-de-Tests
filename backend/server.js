@@ -20,7 +20,7 @@ const multer = require('multer');
 const path = require('path');
 
 // 
-const serviceAccount = require("./config/locamat-7cf78-firebase-adminsdk-2n7yc-3ea14cfee7.json");
+const serviceAccount = require("./config/locamat-5d1e7-firebase-adminsdk-i2s1t-71b338b2e3.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -360,7 +360,7 @@ app.post('/user-management', async (req, res) => {
       console.log(`Email sent to ${email}`);
   
       res.status(201).json({
-        message: 'User added successfully to Firebase and MariaDB, email sent',
+        message: 'User added successfully, password email sent',
       });
     } catch (error) {
       console.error('Error adding user:', error);
@@ -578,63 +578,87 @@ app.get('/equipment-detail/data/:id', async (req, res) => {
     async function initializeDatabase() {
         try {
             const fakeUsers = [
-                ['Robin', 'Lmn', 'test@mail.com', 'MAT0003', 'EMPRUNTEUR'],
-                ['Thomas', 'Vlg', 'user@example.com', 'MAT0004', 'ADMINISTRATEUR'],
-                ['Clara', 'Rouxel', 'rouxel.clara0@gmail.com', 'MAT0018', 'ADMINISTRATEUR'],
+                ['Laumonier', 'Robin', 'user@email.com', 'MAT0003', 'EMPRUNTEUR'],
+                ['Vanwalleghem', 'Thomas', 'admin@email.com', 'MAT0004', 'ADMINISTRATEUR'],
+                ['Rouxel', 'Clara', 'rouxel.clara0@gmail.com', 'MAT0018', 'ADMINISTRATEUR'],
+                ['Ghiffi', 'Jaafar', 'jghiffi@gmail.com', 'Jaaf001', 'ADMINISTRATEUR']
             ];
     
             const fakeMaterials = [
-                ['Macbook Pro', '2019', 'AP001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736343714760-2016-04-25-product-2.png.webp', null],
-                ['Samsung Galaxy A71', 'A71', 'SA001', 'DISPONIBLE', 'http://localhost:3000/uploads/1735993340096-Samsung-Galaxy-Transparent.png', '0698765432'],
-                ['Apple Watch', '2020', 'AP002', 'DISPONIBLE', 'http://localhost:3000/uploads/1735993994868-watchpng.parspng.com-9.png', null],
-                ['iMac', '2020', 'AP003', 'DISPONIBLE', 'http://localhost:3000/uploads/1735994052622-1280px-Imac_16-9.png', null],
-                ['Iphone X', 'X (10)', 'AP004', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345082781-IPhone-X-PNG-High-Quality-Image.png', '0612345678'],
-                ['Samsung Galaxy Z FLIP 4', 'Z FLIP 4', 'SA002', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345649193-Galaxy-Z-Flip4-PNG-Images.png', '0712345678'],
-                ['Ipad Mini', 'Pro 2019', 'AP005', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345681096-ipad-mini-6-header.png', null],
-                ['AirPods Pro', '3eme Generation', 'AP006', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345902365-pngtree-airpods-png-image_9149137.png', null],
-                ['Google Pixel 7', 'Pixel 7', 'GO001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736348609475-unnamed.png', '0672866544'],
-                ['Iphone 13', '13eme', 'AP000', 'DISPONIBLE', 'http://localhost:3000/uploads/1736348669203-pngimg.com - iphone_13_PNG18.png', '0683524688'],
+                ['Macbook Pro', '2019', 'AP001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736419129072-2016-04-25-product-2.png.webp', null, null],
+                ['Samsung Galaxy A71', 'A71', 'SA001', 'DISPONIBLE', 'http://localhost:3000/uploads/1735993340096-Samsung-Galaxy-Transparent.png', '0698765432', null],
+                ['Apple Watch', '2020', 'AP002', 'DISPONIBLE', 'http://localhost:3000/uploads/1735993994868-watchpng.parspng.com-9.png', null, null],
+                ['iMac', '2020', 'AP003', 'DISPONIBLE', 'http://localhost:3000/uploads/1735994052622-1280px-Imac_16-9.png', null, null],
+                ['Iphone X', 'X (10)', 'AP004', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345082781-IPhone-X-PNG-High-Quality-Image.png', '0612345678', null],
+                ['Samsung Galaxy Z FLIP 4', 'Z FLIP 4', 'SA002', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345649193-Galaxy-Z-Flip4-PNG-Images.png', '0712345678', null],
+                ['Ipad Mini', 'Pro 2019', 'AP005', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345681096-ipad-mini-6-header.png', null, null],
+                ['AirPods Pro', '3eme Generation', 'AP006', 'DISPONIBLE', 'http://localhost:3000/uploads/1736345902365-pngtree-airpods-png-image_9149137.png', null, null],
+                ['Google Pixel 7', 'Pixel 7', 'GO001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736348609475-unnamed.png', '0672866544', null],
+                ['Iphone 13', '13eme', 'AP007', 'DISPONIBLE', 'http://localhost:3000/uploads/1736348669203-pngimg.com - iphone_13_PNG18.png', '0683524688', null],
+                ['Corsair Keyboard', 'K70', 'CO001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736723231275-CH-9000068-FR-CGK70RGB-01.png.avif', null, null],
+                ['Logitech Webcam', 'C920', 'LO001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736723286741-c920-gallery-1.webp', null, null],
+                ['JBL Essential', 'Essential 5', 'JB001', 'DISPONIBLE', 'http://localhost:3000/uploads/1736723481117-JBL_FLIP_ESSENTIAL_2_HERO_36360_x3.webp', null, null],
+                ['JBL Flip 5', 'Flip 5', 'JB002', 'DISPONIBLE', 'http://localhost:3000/uploads/1736764122061-JBL_Flip5_Product Photo_Side_RiverTeal-1605x1605-DS3.png', null, null],
+                ['JBL Headphones 770', 'Tune 770', 'JB003', 'DISPONIBLE', 'http://localhost:3000/uploads/1736764176529-1.webp', null, null],
             ];
     
-            // Vérifier et insérer les utilisateurs
-            const usersCount = await mariadb.executeQuery('SELECT COUNT(*) as count FROM utilisateurs');
-            console.log("Résultat brut pour utilisateurs :", usersCount);
+            let usersAdded = 0;
+            let materialsAdded = 0;
     
-            if (Number(usersCount[0]?.count) === 0) {
-                for (const user of fakeUsers) {
+            // Vérifier et insérer les utilisateurs
+            for (const user of fakeUsers) {
+                const [lastName, firstName, email] = user;
+                const existingUser = await mariadb.executeQuery(
+                    `SELECT COUNT(*) as count FROM utilisateurs WHERE emailUtilisateur = ?`,
+                    [email]
+                );
+    
+                if (Number(existingUser[0]?.count) === 0) {
                     await mariadb.executeQuery(
                         `INSERT INTO utilisateurs (nomUtilisateur, prenomUtilisateur, emailUtilisateur, matriculeUtilisateur, roleUtilisateur)
                          VALUES (?, ?, ?, ?, ?)`,
                         user
                     );
-                    console.log(`Utilisateur ajouté : ${user[0]} ${user[1]}`);
+                    usersAdded++;
+                    console.log(`Utilisateur ajouté : ${firstName} ${lastName}`);
                 }
-            } else {
-                console.log("Les utilisateurs existent déjà, aucune insertion effectuée.");
+            }
+    
+            if (usersAdded === 0) {
+                console.log("Tous les utilisateurs existent déjà, aucune insertion effectuée.");
             }
     
             // Vérifier et insérer les matériels
-            const materialsCount = await mariadb.executeQuery('SELECT COUNT(*) as count FROM materiels');
-            console.log("Résultat brut pour matériels :", materialsCount);
+            for (const material of fakeMaterials) {
+                const [name, version, reference] = material;
+                const existingMaterial = await mariadb.executeQuery(
+                    `SELECT COUNT(*) as count FROM materiels WHERE referenceMateriel = ?`,
+                    [reference]
+                );
     
-            if (Number(materialsCount[0]?.count) === 0) {
-                for (const material of fakeMaterials) {
+                if (Number(existingMaterial[0]?.count) === 0) {
                     await mariadb.executeQuery(
                         `INSERT INTO materiels (nomMateriel, versionMateriel, referenceMateriel, etatMateriel, photoMateriel, numeroTelephoneMateriel)
                          VALUES (?, ?, ?, ?, ?, ?)`,
                         material
                     );
-                    console.log(`Matériel ajouté : ${material[0]}`);
+                    materialsAdded++;
+                    console.log(`Matériel ajouté : ${name}`);
                 }
-            } else {
-                console.log("Les matériels existent déjà, aucune insertion effectuée.");
             }
     
-            console.log("Initialisation de la base de données terminée avec succès.");
+            if (materialsAdded === 0) {
+                console.log("Tous les matériels existent déjà, aucune insertion effectuée.");
+            }
+    
+            console.log(
+                `Initialisation terminée. Utilisateurs ajoutés : ${usersAdded}, Matériels ajoutés : ${materialsAdded}.`
+            );
         } catch (err) {
             console.error('Erreur lors de l\'initialisation de la base de données :', err);
         }
-    }    
+    }
+    
     
 
     /**
@@ -844,6 +868,11 @@ async function modifyUserInFirebase(firebaseUid, userDetails) {
 
 
 
+// ###############################################################
+// #                                                             #
+// #                   FONCTION POUR   DEBUG                     #
+// #                                                             #
+// ###############################################################
 
 
 

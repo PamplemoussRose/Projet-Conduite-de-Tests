@@ -1,19 +1,18 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth"; // Ajout de l'importation pour Auth
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBp9_gzvtuz6WTjXkOImNwdSqL5YnIaDXw",
-    authDomain: "locamat-7cf78.firebaseapp.com",
-    projectId: "locamat-7cf78",
-    storageBucket: "locamat-7cf78.appspot.com",
-    messagingSenderId: "820273718810",
-    appId: "1:820273718810:web:5a862a86421df367acd3a3",
-    measurementId: "G-JZPD1JCF52"
+  apiKey: "AIzaSyAT4ipk0PAcnIvntD8N-v1I6i2OcybtQtg",
+  authDomain: "locamat-5d1e7.firebaseapp.com",
+  projectId: "locamat-5d1e7",
+  storageBucket: "locamat-5d1e7.firebasestorage.app",
+  messagingSenderId: "396652887875",
+  appId: "1:396652887875:web:046195e50e4c51a70e39f6",
+  measurementId: "G-MN8EDDC5GY"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 getAnalytics(app);
 const auth = getAuth(app); // Initialisation du module Auth

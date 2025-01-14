@@ -76,7 +76,7 @@ export default {
     async logout() {
       alert("Logged out!");
       await signOut(auth);
-      router.push("/");
+      window.location.href = "http://localhost:8080";
     },
     goToPage() {
       router.push("/");
