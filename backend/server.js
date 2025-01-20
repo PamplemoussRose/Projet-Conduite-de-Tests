@@ -943,3 +943,5 @@ app.get('/debug/list-user-emails', async (req, res) => {
       res.status(500).json({ message: "Erreur lors de la récupération des emails.", error });
     }
   });
+
+  module.exports = app;
